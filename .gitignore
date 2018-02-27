@@ -22,4 +22,8 @@
 hs_err_pid*
 /bin/
 
+# eclipse files
+.classpath
+.project
+
 .ipynb_checkpoints
