@@ -26,13 +26,19 @@ public class SafarAnalyze {
 
 	public static void main(String[] args) {
 		String filePathIn = args[0];
-		String filepathOut = args[1];
+		String filePathOut = args[1];
 		String analyzerStr = args[2];
 		
 		if ( !analyzers.contains(analyzerStr)) {
 			System.out.println("Invalid analyzer \""+ analyzerStr +"\".");
 			System.exit(1);
 		}
+		
+		// Create output directory if it doesn't exists
+		File directory = new File(filePathOut);
+	    if (!directory.exists()){
+	        directory.mkdirs();
+	    }
 		
 		// List all .txt files
 		File directoryIn  = new File(filePathIn);
@@ -50,7 +56,7 @@ public class SafarAnalyze {
 			String normalizedText = normalizer.normalize(fileIn, "utf-8");
 			
 			IMorphologyAnalyzer analyzer = MorphologyAnalyzerFactory.getImplementation(analyzerStr);
-			String filenameOut = Paths.get(filepathOut, basename+".xml").toString();
+			String filenameOut = Paths.get(filePathOut, basename+".xml").toString();
 			analyzer.analyze(normalizedText, new File(filenameOut));
 		}
 		
