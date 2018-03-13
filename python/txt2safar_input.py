@@ -57,11 +57,14 @@ def txt2safar_input(in_file, out_dir):
 
     doc_id = os.path.splitext(os.path.basename(in_file.name))[0]
 
+    out_dir_sub = out_file_name(out_dir, in_file.name)
+    if not os.path.exists(out_dir_sub):
+        os.mkdir(out_dir_sub)
     for (v, p), text in zip(p_numbers, pages):
         text = text.strip()
         if len(text) > 0:
             fname = '{}-V{}P{}.txt'.format(doc_id, v, p)
-            with codecs.open(os.path.join(out_dir, fname), 'wb', encoding='utf-8') as f:
+            with codecs.open(os.path.join(out_dir_sub, fname), 'wb', encoding='utf-8') as f:
                 f.write(text)
 
 if __name__ == '__main__':
