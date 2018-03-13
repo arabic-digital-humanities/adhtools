@@ -10,7 +10,7 @@ from nlppln.utils import out_file_name
 @click.command()
 @click.argument('in_file', type=click.File(encoding='utf-8'))
 @click.option('--out_dir', '-o', default=os.getcwd(), type=click.Path())
-def safar2txt_and_metadata(in_file, out_dir):
+def txt2safar_input(in_file, out_dir):
 
     metadata = {}
     text = []
@@ -63,4 +63,4 @@ def safar2txt_and_metadata(in_file, out_dir):
                 f.write(text)
 
 if __name__ == '__main__':
-    safar2txt_and_metadata()
+    txt2safar_input()
