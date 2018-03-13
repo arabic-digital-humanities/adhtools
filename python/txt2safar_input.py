@@ -18,16 +18,18 @@ def txt2safar_input(in_file, out_dir):
         # TODO: metadata is sometimes inconsistent, (missing # before META,
         # and fields not separated by :: but single :)
         if line.startswith('#META#'):
-            name, value = line.split(u'::')
+            splitted = line.split(u'::')
+            if(len(splitted)==2):
+                name, value = line.split(u'::')
 
-            value = value.strip()
-            name = name.strip()
+                value = value.strip()
+                name = name.strip()
 
-            # only save metadata that has a value
-            if value != 'NODATA':
-                _, name = name.split(u' ', 1)
-                name = name.replace(u' ', u'_')
-                metadata[name] = value
+                # only save metadata that has a value
+                if value != 'NODATA':
+                    _, name = name.split(u' ', 1)
+                    name = name.replace(u' ', u'_')
+                    metadata[name] = value
         else:
             text.append(line)
 
@@ -59,7 +61,7 @@ def txt2safar_input(in_file, out_dir):
         text = text.strip()
         if len(text) > 0:
             fname = '{}-V{}P{}.txt'.format(doc_id, v, p)
-            with codecs.open(fname, 'wb', encoding='utf-8') as f:
+            with codecs.open(os.path.join(out_dir, fname), 'wb', encoding='utf-8') as f:
                 f.write(text)
 
 if __name__ == '__main__':
