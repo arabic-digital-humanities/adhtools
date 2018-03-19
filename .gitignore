@@ -26,4 +26,7 @@ hs_err_pid*
 .classpath
 .project
 
+.eggs
+*.egg-info
 .ipynb_checkpoints
+*.pyc
