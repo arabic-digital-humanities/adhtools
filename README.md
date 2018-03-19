@@ -10,7 +10,7 @@ To analyze a text using SAFAR, you need to [download the SAFAR binaries from the
 Add to your class path:
 * the `SAFAR` directory
 * the `SAFAR/lib` directory
-* the directory containing the compiled `SafarAnalyze`
+* the directory containing the compiled `SafarAnalyze` (from this repository (`java/SafarAnalyze.java`))
 
 Then run the analyzer:
 ```
