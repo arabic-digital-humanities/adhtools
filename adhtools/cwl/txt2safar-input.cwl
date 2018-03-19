@@ -1,7 +1,7 @@
 #!/usr/bin/env cwl-runner
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: ["python", "/home/jvdzwaan/code/research-scripts/python/txt2safar_input.py"]
+baseCommand: ["python", "-m", "adhtools.txt2safar_input"]
 
 inputs:
   in_file:

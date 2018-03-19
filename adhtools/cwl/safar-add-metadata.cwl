@@ -1,7 +1,7 @@
 #!/usr/bin/env cwl-runner
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: ["python", "/home/jvdzwaan/code/research-scripts/python/safar_add_metadata.py"]
+baseCommand: ["python", "-m", "adhtools.safar_add_metadata"]
 requirements:
   InitialWorkDirRequirement:
     listing: $(inputs.in_files)
