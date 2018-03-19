@@ -13,7 +13,7 @@ outputs:
   out_dir:
     type: Directory
     outputBinding:
-      glob: "$(inputs.in_file.basename)"
+      glob: "$(inputs.in_file.nameroot)"
   metadata:
     type: File
     outputBinding:
