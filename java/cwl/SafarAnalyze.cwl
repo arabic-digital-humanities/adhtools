@@ -10,7 +10,7 @@ requirements:
 baseCommand: ["java"]
 
 arguments:
-  - "SafarAnalyze"
+  - valueFrom: SafarAnalyze
     position: 2
   - valueFrom: $(runtime.outdir)
     position: 4
