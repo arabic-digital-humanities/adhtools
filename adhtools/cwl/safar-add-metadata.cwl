@@ -26,4 +26,4 @@ outputs:
   out_dir:
     type: Directory
     outputBinding:
-      glob: output
+      glob: "$(inputs.meta_in.nameroot)"
