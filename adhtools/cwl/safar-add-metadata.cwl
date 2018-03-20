@@ -23,7 +23,7 @@ inputs:
     type: File[]
 
 outputs:
-  out_files:
-    type: File[]
+  out_dir:
+    type: Directory
     outputBinding:
-      glob: "*.xml"
+      glob: output
