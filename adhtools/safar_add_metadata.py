@@ -14,7 +14,8 @@ from nlppln.utils import out_file_name, get_files
 def safar_add_metadata(in_dir, metadata, out_dir):
     in_files = get_files(in_dir)
     
-    out_dir_sub = os.path.join(out_dir, 'output')
+    doc_id = os.path.splitext(os.path.basename(metadata.name))[0]
+    out_dir_sub = os.path.join(out_dir, doc_id)
     if not os.path.exists(out_dir_sub):
         os.mkdir(out_dir_sub)
         
