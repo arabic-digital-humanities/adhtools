@@ -20,12 +20,15 @@ def safar_add_metadata(in_dir, metadata, out_dir):
         with codecs.open(in_file, encoding='utf-8') as f:
             soup = BeautifulSoup(f, 'xml')
 
+        # Make document with a single root element
+        document = BeautifulSoup('<document></document>', 'xml')
         md = copy.copy(metadata)
-        soup.insert(0, md.metadata)
+        document.document.append(md.metadata)
+        document.document.append(soup.morphology_analysis)
 
         xml_out = out_file_name(out_dir, in_file)
         with codecs.open(xml_out, 'wb', encoding='utf-8') as f:
-            f.write(soup.prettify())
+            f.write(document.prettify())
 
 
 if __name__ == '__main__':
