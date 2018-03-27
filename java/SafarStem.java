@@ -1,6 +1,3 @@
-import java.util.Set;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import safar.basic.morphology.stemmer.factory.StemmerFactory;
@@ -8,13 +5,11 @@ import safar.basic.morphology.stemmer.interfaces.IStemmer;
 import safar.util.normalization.factory.NormalizerFactory;
 import safar.util.normalization.interfaces.INormalizer;
 
-import java.util.HashSet;
+import java.util.Map;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.Paths;
-import java.util.Arrays;
+import java.util.HashMap;
 
 
 /**
@@ -23,16 +18,24 @@ import java.util.Arrays;
  */
 public class SafarStem {
 
-	private static final Set<String> stemmers = new HashSet<String>(Arrays.asList(
-			new String[] {"KHOJA STEMMER", "LIGHT10", "ISRI", "MOTAZ STEMMER", "TASHAPHYNE"}
-	));
-
+	private static final Map<String, String> stemmers = createMap();
+    private static Map<String, String> createMap() {
+        Map<String,String> stemmers = new HashMap<String,String>();
+        stemmers.put("KHOJA", "KHOJA STEMMER");
+        stemmers.put("LIGHT10", "LIGHT10");
+        stemmers.put("ISRI", "ISRI");
+        stemmers.put("MOTAZ", "MOTAZ STEMMER");
+        stemmers.put("TASHAPHYNE", "TASHAPHYNE");
+        
+        return stemmers;
+    }
+	
 	public static void main(String[] args) {
 		String filePathIn = args[0];
 		String filePathOut = args[1];
 		String stemmerStr = args[2];
 		
-		if ( !stemmers.contains(stemmerStr)) {
+		if ( !stemmers.containsKey(stemmerStr) ) {
 			System.out.println("Invalid stemmer \""+ stemmerStr +"\".");
 			System.exit(1);
 		}
@@ -61,7 +64,7 @@ public class SafarStem {
 			
 			System.out.println("Stemming "+basename+".txt");
 			
-			IStemmer stemmer = StemmerFactory.getImplementation(stemmerStr);
+			IStemmer stemmer = StemmerFactory.getImplementation(stemmers.get(stemmerStr));
 			String filenameOut = Paths.get(filePathOut, basename+".xml").toString();
 			stemmer.stem(normalizedText, new File(filenameOut));
 		}
