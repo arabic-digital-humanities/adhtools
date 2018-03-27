@@ -29,6 +29,9 @@ def txt2safar_input(in_file, out_dir):
                 if value != 'NODATA':
                     _, name = name.split(u' ', 1)
                     name = name.replace(u' ', u'_')
+                    # remove left to right mark
+                    name = name.replace(u"\u200F", u'')
+                    name = name.split(u'.')[1]
                     metadata[name] = value
         else:
             text.append(line)
