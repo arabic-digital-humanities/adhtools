@@ -40,8 +40,10 @@ def safar_add_metadata(in_dir, in_dir_meta, in_file_meta, out_dir):
         for m in md_all.find_all('meta'):
             md.append(m)
         document.document.append(md)
-        document.document.append(soup.morphology_analysis)
-
+        try:
+            document.document.append(soup.morphology_analysis)
+        except:
+            document.document.append(soup.stemmer_analysis)
         xml_out = out_file_name(out_dir_sub, in_file)
         with codecs.open(xml_out, 'wb', encoding='utf-8') as f:
             f.write(document.prettify())
