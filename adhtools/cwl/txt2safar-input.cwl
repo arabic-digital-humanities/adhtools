@@ -20,7 +20,11 @@ outputs:
     type: Directory
     outputBinding:
       glob: "$(inputs.in_file.nameroot)"
-  metadata:
+  out_dir_meta:
+    type: Directory
+    outputBinding:
+      glob: "$(inputs.in_file.nameroot)_meta"
+  out_file_meta:
     type: File
     outputBinding:
-      glob: "*.xml"
+      glob: "$(inputs.in_file.nameroot).xml"

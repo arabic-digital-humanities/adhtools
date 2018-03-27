@@ -15,15 +15,19 @@ arguments:
     position: 1
 
 inputs:
-  meta_in:
-    type: File
+  in_dir_meta:
+    type: Directory
     inputBinding:
-      position: 1
+      position: 2
   in_files:
     type: File[]
+  in_file_meta:
+    type: File
+    inputBinding:
+      position: 3
 
 outputs:
   out_dir:
     type: Directory
     outputBinding:
-      glob: "$(inputs.meta_in.nameroot)"
+      glob: "$(inputs.in_file_meta.nameroot)"
