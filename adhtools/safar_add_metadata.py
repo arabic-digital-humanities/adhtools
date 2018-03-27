@@ -13,14 +13,14 @@ from nlppln.utils import out_file_name, get_files
 @click.option('--out_dir', '-o', default=os.getcwd(), type=click.Path())
 def safar_add_metadata(in_dir, metadata, out_dir):
     in_files = get_files(in_dir)
-    
+
     doc_id = os.path.splitext(os.path.basename(metadata.name))[0]
     out_dir_sub = os.path.join(out_dir, doc_id)
     if not os.path.exists(out_dir_sub):
         os.mkdir(out_dir_sub)
-        
+
     metadata = BeautifulSoup(metadata, 'xml')
-    
+
     for in_file in in_files:
         with codecs.open(in_file, encoding='utf-8') as f:
             soup = BeautifulSoup(f, 'xml')
@@ -29,7 +29,11 @@ def safar_add_metadata(in_dir, metadata, out_dir):
         document = BeautifulSoup('<document></document>', 'xml')
         md = copy.copy(metadata)
         document.document.append(md.metadata)
-        document.document.append(soup.morphology_analysis)
+
+        try:
+            document.document.append(soup.morphology_analysis)
+        except:
+            document.document.append(soup.stemmer_analysis)
 
         xml_out = out_file_name(out_dir_sub, in_file)
         with codecs.open(xml_out, 'wb', encoding='utf-8') as f:
