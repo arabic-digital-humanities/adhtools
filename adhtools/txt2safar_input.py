@@ -56,7 +56,7 @@ def txt2safar_input(in_file, out_dir):
 
     # regex with groups
     p_numbers = re.findall('PageV(\d{2})P(\d{3})', text)
-    p_numbers = [('dummy', 'dummy')] + p_numbers
+    p_numbers = p_numbers + [('dummy', 'dummy')]
 
     # same regex without groups
     pages = re.split('PageV\d{2}P\d{3}', text)
