@@ -69,10 +69,10 @@ def txt2safar_input(in_file, out_dir):
         os.mkdir(out_dir_sub)
     if not os.path.exists(out_dir_metadata):
         os.mkdir(out_dir_metadata)
-    for (v, p), text in zip(p_numbers, pages):
+    for i, (v, p), text in zip(range(len(pages)), p_numbers, pages):
         text = text.strip()
         if len(text) > 0:
-            fname = '{}-V{}P{}.txt'.format(doc_id, v, p)
+            fname = '{}-{:03}.txt'.format(doc_id, i)
             with codecs.open(os.path.join(out_dir_sub, fname), 'wb', encoding='utf-8') as f:
                 f.write(text)
             metadata_page = {}
@@ -80,7 +80,7 @@ def txt2safar_input(in_file, out_dir):
                 metadata_page['Volume'] = v
             if p is not 'dummy':
                 metadata_page['Page'] = p
-            xml_out = os.path.join(out_dir_metadata, '{}-V{}P{}.xml'.format(doc_id, v, p))
+            xml_out = os.path.join(out_dir_metadata, '{}-{:03}.txt'.format(doc_id, i))
             write_metadata_file(metadata_page, xml_out)
 
 if __name__ == '__main__':
