@@ -11,26 +11,31 @@ baseCommand: ["java"]
 
 arguments:
   - valueFrom: SafarAnalyze
-    position: 2
+    position: 3
   - valueFrom: $(runtime.outdir)
-    position: 4
+    position: 5
 
 inputs:
   cp:
     type: string
     inputBinding:
-      position: 1
+      position: 2
       prefix: -cp
 
   in_dir:
     type: Directory
     inputBinding:
-      position: 3
+      position: 4
   analyzer:
     type: string
     default: Alkhalil
     inputBinding:
-      position: 5
+      position: 6
+  xmx:
+    type: string
+    default: -Xmx4096m
+    inputBinding:
+      position: 1
 
 outputs:
   out_files:

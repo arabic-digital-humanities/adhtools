@@ -30,3 +30,5 @@ hs_err_pid*
 *.egg-info
 .ipynb_checkpoints
 *.pyc
+build/
+dist/
