@@ -80,7 +80,7 @@ def txt2safar_input(in_file, out_dir):
                 metadata_page['Volume'] = v
             if p is not 'dummy':
                 metadata_page['Page'] = p
-            xml_out = os.path.join(out_dir_metadata, '{}-{:03}.txt'.format(doc_id, i))
+            xml_out = os.path.join(out_dir_metadata, '{}-{:03}.xml'.format(doc_id, i))
             write_metadata_file(metadata_page, xml_out)
 
 if __name__ == '__main__':
