@@ -2,16 +2,28 @@ import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 
+import common.constants.Language;
 import safar.basic.morphology.analyzer.factory.MorphologyAnalyzerFactory;
 import safar.basic.morphology.analyzer.interfaces.IMorphologyAnalyzer;
+import safar.basic.morphology.analyzer.model.WordMorphologyAnalysis;
+import safar.basic.morphology.analyzer.util.*;
 import safar.util.normalization.factory.NormalizerFactory;
+import safar.util.normalization.impl.SAFARNormalizer;
 import safar.util.normalization.interfaces.INormalizer;
+import safar.util.splitting.impl.SAFARSentenceSplitter;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 
 
 /**
@@ -50,14 +62,33 @@ public class SafarAnalyze {
 		});
 		for(File fileIn : inFiles) {
 			String basename = FilenameUtils.getBaseName(fileIn.getName());
-			// Normalize
-			System.out.println("Normalizing file "+basename);
-			INormalizer normalizer = NormalizerFactory.getSAFARNormalizerImplementation();
-			String normalizedText = normalizer.normalize(fileIn, "utf-8");
+			System.out.println("Reading file "+basename);
 			
-			IMorphologyAnalyzer analyzer = MorphologyAnalyzerFactory.getImplementation(analyzerStr);
-			String filenameOut = Paths.get(filePathOut, basename+".xml").toString();
-			analyzer.analyze(normalizedText, new File(filenameOut));
+			 try {
+				BufferedReader in = new BufferedReader(new FileReader(fileIn));
+				SAFARNormalizer normalizer = new SAFARNormalizer();
+				List<WordMorphologyAnalysis> wordMorphologyAnalysis = new LinkedList<WordMorphologyAnalysis>();
+				int i = 0;
+				for(String sentence = in.readLine(); sentence != null; sentence = in.readLine()) {
+					String normalizedText = normalizer.normalize(sentence);
+					
+					IMorphologyAnalyzer analyzer = MorphologyAnalyzerFactory.getImplementation(analyzerStr);
+					List<WordMorphologyAnalysis> wordList = analyzer.analyze(normalizedText); 
+					wordMorphologyAnalysis.addAll(wordList);
+					
+					i++;
+				}
+				System.out.println("Number of sentences: "+i);
+				in.close();
+				System.out.println("Number of analyzed words: " +wordMorphologyAnalysis.size());
+				String filenameOut = Paths.get(filePathOut, basename+".xml").toString();
+				File fileOut = new File(filenameOut);
+				Utilities.saveAnalysisResultAsXML(wordMorphologyAnalysis, fileOut, Language.ENGLISH);
+				
+			 } catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			 }
 		}
 		
 		
