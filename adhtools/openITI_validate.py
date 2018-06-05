@@ -23,7 +23,7 @@ def validate(in_file, verbose):
     for i, line in enumerate(metadata.split('\n')[1:]):
         if line != '':
             match = re.match('#META#\s\d{3}\.\w*\s::\s.*', line)
-            assert match is not None, 'Metadata line {} does not comply with format'.format(i+1)
+            assert match is not None, 'Metadata line {} does not comply with format'.format(i+2)
     
     text = split_metadata[1]
     
