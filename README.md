@@ -34,3 +34,17 @@ Or use the CWL specification:
 ```
 cwltool /path/to/research-scripts/java/cwl/SafarAnalyze.cwl --cp <what to add to the class path> --in_dir </path/to/input/directory> --analyzer <SAFAR analyzer (Alkhalil|BAMA|MADAMIRA)>
 ```
+
+### Pipelines for analyzing
+[This notebook](https://github.com/arabic-digital-humanities/research-scripts/blob/master/notebooks/index-workflow.ipynb) shows how to create pipelines for processing the next using `nlppln`.
+To run a workflow, copy all cwl steps (including those from nlppln) to a cwl-working-dir. See [the documentation of nlppln](http://nlppln.readthedocs.io/en/latest/).
+
+To analyze and index a complete directory, run from within the desired output directory:
+```
+cwltool ~/cwl-working-dir/analyze-and-index-dir.cwl \
+   --cp /path/to/java-lib/*:/path/to/arabic-digital-humanities/research-scripts/java/    \
+   --in_dir /path/to/corpus    \
+   --xml_dir_name corpus-xml     \
+   --index_name corpus \
+   --analyzer BAMA
+```
