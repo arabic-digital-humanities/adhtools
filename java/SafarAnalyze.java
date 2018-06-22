@@ -1,6 +1,12 @@
 import java.util.Set;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.io.FilenameUtils;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import common.constants.Language;
 import safar.basic.morphology.analyzer.factory.MorphologyAnalyzerFactory;
@@ -60,6 +66,7 @@ public class SafarAnalyze {
 		        return name.endsWith(".txt");
 		    }
 		});
+		
 		for(File fileIn : inFiles) {
 			String basename = FilenameUtils.getBaseName(fileIn.getName());
 			System.out.println("Reading file "+basename);
@@ -74,6 +81,7 @@ public class SafarAnalyze {
 					
 					IMorphologyAnalyzer analyzer = MorphologyAnalyzerFactory.getImplementation(analyzerStr);
 					List<WordMorphologyAnalysis> wordList = analyzer.analyze(normalizedText); 
+					
 					wordMorphologyAnalysis.addAll(wordList);
 					
 					i++;
@@ -81,14 +89,47 @@ public class SafarAnalyze {
 				System.out.println("Number of sentences: "+i);
 				in.close();
 				System.out.println("Number of analyzed words: " +wordMorphologyAnalysis.size());
-				String filenameOut = Paths.get(filePathOut, basename+".xml").toString();
-				File fileOut = new File(filenameOut);
-				Utilities.saveAnalysisResultAsXML(wordMorphologyAnalysis, fileOut, Language.ENGLISH);
+				
+				
+				// Save in chunks of n words
+				int n = 1000;
+				List<File> chunkfiles = new LinkedList<File>(); 
+				for(int j=0; j<wordMorphologyAnalysis.size(); j+=n) {
+					int k = Math.min(j+n, wordMorphologyAnalysis.size());
+					System.out.println("Sublist from "+j+" to "+k);
+					List<WordMorphologyAnalysis> sublist = wordMorphologyAnalysis.subList(j, k);
+					
+					String filenameOut = Paths.get(filePathOut, basename+".sub"+j+".xml").toString();
+					File fileOut = new File(filenameOut);
+					chunkfiles.add(fileOut);
+					Utilities.saveAnalysisResultAsXML(sublist, fileOut, Language.ENGLISH);
+				}
+				
+				//Merge the docsDocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+				DocumentBuilder db = dbf.newDocumentBuilder();
+				Document docOut = null;
+				for(File file : chunkfiles) {
+					Document doc = db.parse(file);
+					if(docOut==null) {
+						docOut = doc;
+					}
+					else {
+						
+					}
+				}
+	            
 				
 			 } catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			 }
+			 } catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SAXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		
