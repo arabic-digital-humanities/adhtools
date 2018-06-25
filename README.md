@@ -37,7 +37,7 @@ cwltool /path/to/research-scripts/java/cwl/SafarAnalyze.cwl --cp <what to add to
 
 ### Pipelines for analyzing
 [This notebook](https://github.com/arabic-digital-humanities/research-scripts/blob/master/notebooks/index-workflow.ipynb) shows how to create pipelines for processing the next using `nlppln`.
-To run a workflow, copy all cwl steps (including those from nlppln) to a cwl-working-dir. See [the documentation of nlppln](http://nlppln.readthedocs.io/en/latest/).
+To run a workflow, copy all cwl steps to a cwl-working-dir. Copy the files from these three directories: `adhtools/cwl`, `java/cwl` and from the [nlppln repository](https://github.com/nlppln/nlppln/tree/master/nlppln/cwl). See [the documentation of nlppln](http://nlppln.readthedocs.io/en/latest/).
 
 To analyze and index a complete directory, run from within the desired output directory:
 ```
