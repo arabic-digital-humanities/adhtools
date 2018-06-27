@@ -27,7 +27,12 @@ inputs:
     inputBinding:
       position: 4
   analyzer:
-    type: string
+    type:
+      type: enum
+      symbols:
+      - Alkhalil
+      - BAMA
+      - MADAMIRA
     default: Alkhalil
     inputBinding:
       position: 6

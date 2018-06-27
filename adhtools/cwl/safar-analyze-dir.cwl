@@ -7,7 +7,11 @@ requirements:
 inputs:
   analyzer:
     default: Alkhalil
-    type: string
+    type:
+      type: enum
+      symbols:
+      - Alkhalil
+      - BAMA
   in_dir: Directory
   cp: string
   index_name:
@@ -15,10 +19,10 @@ inputs:
     type: string
 outputs:
   safar_output:
-    outputSource: safar-analyze-book/safar_output_dir
     type:
-      type: array
       items: Directory
+      type: array
+    outputSource: safar-analyze-book/safar_output_dir
 steps:
   ls:
     run: ls.cwl
@@ -29,8 +33,8 @@ steps:
   safar-analyze-book:
     run: safar-analyze-book.cwl
     in:
-      book: ls/out_files
       cp: cp
+      book: ls/out_files
       analyzer: analyzer
     out:
     - safar_output_dir
