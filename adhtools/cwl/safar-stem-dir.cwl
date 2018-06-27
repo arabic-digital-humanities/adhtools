@@ -7,7 +7,14 @@ requirements:
 inputs:
   stemmer:
     default: LIGHT10
-    type: string
+    type:
+      type: enum
+      symbols:
+      - KHOJA
+      - LIGHT10
+      - ISRI
+      - MOTAZ
+      - TASHAPHYNE
   in_dir: Directory
   cp: string
   index_name:
@@ -15,22 +22,22 @@ inputs:
     type: string
 outputs:
   safar_output:
-    outputSource: safar-stem-book/safar_output_dir
     type:
-      type: array
       items: Directory
+      type: array
+    outputSource: safar-stem-book-1/safar_output_dir
 steps:
-  ls-2:
+  ls:
     run: ls.cwl
     in:
       in_dir: in_dir
     out:
     - out_files
-  safar-stem-book:
+  safar-stem-book-1:
     run: safar-stem-book.cwl
     in:
-      book: ls-2/out_files
       cp: cp
+      book: ls/out_files
       stemmer: stemmer
     out:
     - safar_output_dir
