@@ -7,7 +7,11 @@ requirements:
 inputs:
   analyzer:
     default: Alkhalil
-    type: string
+    type:
+      type: enum
+      symbols:
+      - Alkhalil
+      - BAMA
   in_dir: Directory
   cp: string
   index_name:
@@ -30,43 +34,44 @@ inputs:
     type: string
 outputs:
   indexed:
-    outputSource: blacklabindexer-2/out_dir
     type: Directory
+    outputSource: blacklabindexer/out_dir
   merged_dir:
-    outputSource: gather-dirs/out
     type: Directory
+    outputSource: gather-dirs-2/out
 steps:
-  ls-1:
+  ls:
     run: ls.cwl
     in:
       in_dir: in_dir
     out:
     - out_files
-  safar-analyze-book-1:
+  safar-analyze-book:
     run: safar-analyze-book.cwl
     in:
-      book: ls-1/out_files
       cp: cp
+      book: ls/out_files
       analyzer: analyzer
     out:
     - safar_output_dir
     scatter:
     - book
     scatterMethod: dotproduct
-  gather-dirs:
+  gather-dirs-2:
     run: gather-dirs.cwl
     in:
-      in_dirs: safar-analyze-book-1/safar_output_dir
+      dir_name: xml_dir_name
+      in_dirs: safar-analyze-book/safar_output_dir
     out:
     - out
-  blacklabindexer-2:
+  blacklabindexer:
     run: https://raw.githubusercontent.com/arabic-digital-humanities/BlackLabIndexer-docker/master/blacklabindexer.cwl
     in:
-      action: action
-      in_dir: gather-dirs/out
-      index_format: index_format
-      index_name: index_name
       content_viewable: content_viewable
+      index_name: index_name
+      action: action
+      in_dir: gather-dirs-2/out
       text_direction: text_direction
+      index_format: index_format
     out:
     - out_dir

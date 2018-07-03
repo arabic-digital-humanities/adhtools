@@ -27,7 +27,14 @@ inputs:
     inputBinding:
       position: 3
   stemmer:
-    type: string
+    type:
+      type: enum
+      symbols:
+      - KHOJA
+      - LIGHT10
+      - ISRI
+      - MOTAZ
+      - TASHAPHYNE
     default: LIGHT10
     inputBinding:
       position: 5
