@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import click
 import os
+import shutil
 
 from nlppln.utils import get_files, out_file_name, read_xml, write_xml
 
@@ -16,29 +17,36 @@ def merge_safar_xml(in_dir, out_dir):
 
     in_files = get_files(in_dir)
 
-    fname = os.path.basename(in_files[0]).split('-')[0]
-    xml_out = out_file_name(out_dir, u'{}.xml'.format(fname))
+    if len(in_files) == 1:
+        fname = os.path.basename(in_files[0]).split('-')[0]
+        xml_out = out_file_name(out_dir, u'{}.xml'.format(fname))
 
-    wd = read_xml(in_files[0])
+        shutil.copy2(in_files[0], xml_out)
 
-    total_words = get_total_words(wd)
+    elif len(in_files) > 1:
+        fname = os.path.basename(in_files[0]).split('-')[0]
+        xml_out = out_file_name(out_dir, u'{}.xml'.format(fname))
 
-    for fi in in_files[1:]:
-        doc = read_xml(fi)
-        tw = get_total_words(doc)
-        words = doc.find_all('word')
+        wd = read_xml(in_files[0])
 
-        # sanity check
-        assert len(words) == tw
+        total_words = get_total_words(wd)
 
-        for w in words:
-            w['w_id'] = int(w['w_id']) + total_words
-            wd.morphology_analysis.append(w)
+        for fi in in_files[1:]:
+            doc = read_xml(fi)
+            tw = get_total_words(doc)
+            words = doc.find_all('word')
 
-        total_words += tw
+            # sanity check
+            assert len(words) == tw
 
-    wd.morphology_analysis['total_words'] = total_words
-    write_xml(wd, xml_out)
+            for w in words:
+                w['w_id'] = int(w['w_id']) + total_words
+                wd.morphology_analysis.append(w)
+
+            total_words += tw
+
+        wd.morphology_analysis['total_words'] = total_words
+        write_xml(wd, xml_out)
 
 
 if __name__ == '__main__':
