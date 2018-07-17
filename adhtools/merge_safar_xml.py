@@ -7,7 +7,11 @@ from nlppln.utils import get_files, out_file_name, read_xml, write_xml
 
 
 def get_total_words(soup):
-    return int(soup.morphology_analysis['total_words'])
+    try:
+        num = soup.morphology_analysis['total_words']
+    except TypeError:
+        num = soup.stemmer_analysis['total_words']
+    return int(num)
 
 
 @click.command()
@@ -41,11 +45,17 @@ def merge_safar_xml(in_dir, out_dir):
 
             for w in words:
                 w['w_id'] = int(w['w_id']) + total_words
-                wd.morphology_analysis.append(w)
+                try:
+                    wd.morphology_analysis.append(w)
+                except AttributeError:
+                    wd.stemmer_analysis.append(w)
 
             total_words += tw
 
-        wd.morphology_analysis['total_words'] = total_words
+        try:
+            wd.morphology_analysis['total_words'] = total_words
+        except TypeError:
+            wd.stemmer_analysis['total_words'] = total_words
         write_xml(wd, xml_out)
 
 
