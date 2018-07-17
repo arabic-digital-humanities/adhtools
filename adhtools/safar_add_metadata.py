@@ -3,6 +3,7 @@ import click
 import codecs
 import os
 import copy
+import six
 from bs4 import BeautifulSoup
 from nlppln.utils import out_file_name, get_files
 
@@ -46,7 +47,12 @@ def safar_add_metadata(in_dir, in_dir_meta, in_file_meta, out_dir):
             document.document.append(soup.stemmer_analysis)
         xml_out = out_file_name(out_dir_sub, in_file)
         with codecs.open(xml_out, 'wb', encoding='utf-8') as f:
-            f.write(document.prettify())
+            if six.PY2:
+                # six.u doesn't work in Python 2 with non-ascii text
+                # See https://pythonhosted.org/six/#six.u
+                f.write(unicode(document))
+            else:
+                f.write(six.u(document))
 
 
 if __name__ == '__main__':
