@@ -52,7 +52,7 @@ def safar_add_metadata(in_dir, in_dir_meta, in_file_meta, out_dir):
                 # See https://pythonhosted.org/six/#six.u
                 f.write(unicode(document))
             else:
-                f.write(six.u(document))
+                f.write(str(document))
 
 
 if __name__ == '__main__':
