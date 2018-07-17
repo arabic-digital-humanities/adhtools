@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import click
 import os
-import shutil
 
 from nlppln.utils import get_files, out_file_name, read_xml, write_xml
 
@@ -21,13 +20,7 @@ def merge_safar_xml(in_dir, out_dir):
 
     in_files = get_files(in_dir)
 
-    if len(in_files) == 1:
-        fname = os.path.basename(in_files[0]).split('-')[0]
-        xml_out = out_file_name(out_dir, u'{}.xml'.format(fname))
-
-        shutil.copy2(in_files[0], xml_out)
-
-    elif len(in_files) > 1:
+    if len(in_files) >= 1:
         fname = os.path.basename(in_files[0]).split('-')[0]
         xml_out = out_file_name(out_dir, u'{}.xml'.format(fname))
 
