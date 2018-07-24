@@ -32,7 +32,7 @@ def openiti2txt(in_file, out_dir):
     # TODO: normalize spaces
 
     out_file = out_file_name(out_dir, in_file.name)
-    print out_file
+    print(out_file)
     with codecs.open(out_file, 'wb', encoding='utf-8') as f:
         f.write(text)
 

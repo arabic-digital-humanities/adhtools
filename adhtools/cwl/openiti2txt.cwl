@@ -6,7 +6,7 @@ baseCommand: ["python", "-m", "nlppln.commands.openiti2txt"]
 inputs:
   in_file:
     type: File
-		inputBinding:
+    inputBinding:
       position: 2
 
 outputs:
