@@ -48,7 +48,8 @@ def txt2safar_input(in_file, out_dir):
             text.append(line)
 
     # XML file with metadata
-    xml_out = out_file_name(out_dir, in_file.name, ext='xml')
+    doc_id = os.path.splitext(os.path.basename(in_file.name))[0]
+    xml_out = os.path.join(out_dir, '{}-meta.xml'.format(doc_id))
     write_metadata_file(metadata, xml_out)
 
     text = u''.join(text) 
