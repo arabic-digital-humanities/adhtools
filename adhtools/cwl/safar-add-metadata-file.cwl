@@ -1,8 +1,7 @@
 #!/usr/bin/env cwl-runner
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: ["python", "-m", "adhtools.split_text"]
-
+baseCommand: ["python", "-m", "adhtools.safar_add_metadata_file"]
 requirements:
   EnvVarRequirement:
     envDef:
@@ -14,15 +13,13 @@ inputs:
     type: File
     inputBinding:
       position: 1
-  regex:
-    type: string
+  in_file_meta:
+    type: File
     inputBinding:
       position: 2
 
 outputs:
-  out_files:
-    type: File[]
+  out_file:
+    type: File
     outputBinding:
-      glob: "*.txt"
-  
-    
+      glob: "*.xml"

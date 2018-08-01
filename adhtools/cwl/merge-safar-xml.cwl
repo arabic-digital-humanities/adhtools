@@ -15,7 +15,7 @@ inputs:
       position: 0
 
 outputs:
-  out_dir:
+  out_file:
     type: File
     outputBinding:
       glob: "*.xml"
