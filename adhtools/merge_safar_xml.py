@@ -21,7 +21,11 @@ def merge_safar_xml(in_dir, out_dir):
     words = []
     metadata = b'<metadata></metadata>'
 
-    if len(in_files) > 1:
+    if len(in_files) == 0:
+        msg = 'Unable to merge xml files, because the input directory is ' \
+              'empty.'
+        raise(ValueError(msg))
+    else:
         num_words = 0
 
         fname = os.path.basename(in_files[0]).split('-')[0]
@@ -58,21 +62,21 @@ def merge_safar_xml(in_dir, out_dir):
                     del elem.getparent()[0]
             del context
 
-    # write the output
-    with codecs.open(xml_out, 'wb') as f:
-        f.write(b'<?xml version="1.0" encoding="utf-8"?>\n')
-        f.write(b'<document>\n')
+        # write the output
+        with codecs.open(xml_out, 'wb') as f:
+            f.write(b'<?xml version="1.0" encoding="utf-8"?>\n')
+            f.write(b'<document>\n')
 
-        f.write(metadata)
+            f.write(metadata)
 
-        tag = '  <{} total_words="{}">\n'.format(analysis_tag, num_words)
-        f.write(tag.encode('utf-8'))
+            tag = '  <{} total_words="{}">\n'.format(analysis_tag, num_words)
+            f.write(tag.encode('utf-8'))
 
-        for w in words:
-            f.write(w)
+            for w in words:
+                f.write(w)
 
-        f.write('  </{}>\n'.format(analysis_tag).encode('utf-8'))
-        f.write(b'</document>\n')
+            f.write('  </{}>\n'.format(analysis_tag).encode('utf-8'))
+            f.write(b'</document>\n')
 
 
 if __name__ == '__main__':
