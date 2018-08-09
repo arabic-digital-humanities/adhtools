@@ -28,7 +28,7 @@ def merge_safar_xml(in_dir, out_dir):
     else:
         num_words = 0
 
-        fname = os.path.basename(in_files[0]).split('-')[0]
+        fname = os.path.basename(in_files[0]).rsplit('-', 1)[0]
         xml_out = out_file_name(out_dir, u'{}.xml'.format(fname))
 
         for i, fi in enumerate(in_files):
