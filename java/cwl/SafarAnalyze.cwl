@@ -3,6 +3,8 @@ cwlVersion: v1.0
 class: CommandLineTool
 
 requirements:
+  InitialWorkDirRequirement:
+    listing: $(inputs.in_files)
   EnvVarRequirement:
     envDef:
       LANG: en_US.UTF-8    # This value is apparently used by SAFAR for the output file encoding
@@ -14,6 +16,9 @@ arguments:
     position: 3
   - valueFrom: $(runtime.outdir)
     position: 5
+  - valueFrom: $(runtime.outdir)
+    position: 4
+
 
 inputs:
   cp:
@@ -22,10 +27,8 @@ inputs:
       position: 2
       prefix: -cp
 
-  in_dir:
-    type: Directory
-    inputBinding:
-      position: 4
+  in_files:
+    type: File[]
   analyzer:
     type:
       type: enum
