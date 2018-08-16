@@ -2,6 +2,7 @@
 import click
 import os
 import codecs
+import tqdm
 
 from lxml import etree
 
@@ -31,7 +32,8 @@ def merge_safar_xml(in_dir, out_dir):
         fname = os.path.basename(in_files[0]).rsplit('-', 1)[0]
         xml_out = out_file_name(out_dir, u'{}.xml'.format(fname))
 
-        for i, fi in enumerate(in_files):
+        click.echo('Reading xml files')
+        for i, fi in tqdm.tqdm(enumerate(in_files)):
             if i == 0:
                 # check whether the analysis_tag should be stemmer_analysis
                 # and extract the metadata
@@ -63,6 +65,7 @@ def merge_safar_xml(in_dir, out_dir):
             del context
 
         # write the output
+        click.echo('Writing output')
         with codecs.open(xml_out, 'wb') as f:
             f.write(b'<?xml version="1.0" encoding="utf-8"?>\n')
             f.write(b'<document>\n')
