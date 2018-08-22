@@ -2,8 +2,11 @@
 import click
 import codecs
 import os
+import tempfile
+import re
 
 from lxml import etree
+from tqdm import tqdm
 
 from nlppln.utils import out_file_name, create_dirs
 
@@ -15,33 +18,44 @@ from nlppln.utils import out_file_name, create_dirs
 def safar_add_metadata(in_file, in_file_meta, out_dir):
     create_dirs(out_dir)
 
-    analysis_tag = 'morphology_analysis'
-    total_words = '0'
+    analysis_tag = None
+    total_words = None
 
-    words = []
     metadata = '<metadata></metadata>'
 
     # check whether the analysis_tag should be stemmer_analysis
-    context = etree.iterparse(in_file, events=('end', ),
-                              tag=('stemmer_analysis', 'morphology_analysis'))
-    for event, elem in context:
-        if elem.tag == 'stemmer_analysis':
-            analysis_tag = elem.tag
-        total_words = elem.attrib['total_words']
+    with codecs.open(in_file, 'r', encoding='utf-8') as xml_file:
+        for line in xml_file:
+            if re.search('morphology_analysis', line):
+                analysis_tag = 'morphology_analysis'
+            elif re.search('stemmer_analysis', line):
+                analysis_tag = 'stemmer_analysis'
+
+            m = re.search('total_words="(\d+)"', line)
+            if m:
+                total_words = m.group(1)
+
+            if analysis_tag is not None and total_words is not None:
+                break
 
     # Extract the words
-    context = etree.iterparse(in_file, events=('end', ), tag=('word'))
-    for event, elem in context:
-        # Setting method to html (instead of xml) fixes problems
-        # with writing Arabic characters in the value attribute of
-        # the word element.
-        words.append(etree.tostring(elem, encoding='utf-8', method='html'))
+    click.echo('Extracting tokens')
+    (fd, tmpfile) = tempfile.mkstemp()
+    with codecs.open(tmpfile, 'wb') as words:
+        context = etree.iterparse(in_file, events=('end', ), tag=('word'))
+        context = tqdm(context, total=int(total_words))
+        for event, elem in context:
+            # Setting method to html (instead of xml) fixes problems
+            # with writing Arabic characters in the value attribute of
+            # the word element.
+            words.write(etree.tostring(elem, encoding='utf-8', method='html'))
 
-        # make iteration over context fast and consume less memory
-        # https://www.ibm.com/developerworks/xml/library/x-hiperfparse
-        elem.clear()
-        while elem.getprevious() is not None:
-            del elem.getparent()[0]
+            # make iteration over context fast and consume less memory
+            # https://www.ibm.com/developerworks/xml/library/x-hiperfparse
+            elem.clear()
+            while elem.getprevious() is not None:
+                del elem.getparent()[0]
+        del context
 
     # Extract the metadata
     with codecs.open(in_file_meta, 'r', encoding='utf-8') as f:
@@ -51,6 +65,7 @@ def safar_add_metadata(in_file, in_file_meta, out_dir):
     metadata = ''.join(lines)
 
     # Write output
+    click.echo('Writing output')
     xml_out = out_file_name(out_dir, in_file)
     with codecs.open(xml_out, 'wb') as f:
         f.write(b'<?xml version="1.0" encoding="utf-8"?>\n')
@@ -61,11 +76,14 @@ def safar_add_metadata(in_file, in_file_meta, out_dir):
         tag = '  <{} total_words="{}">\n'.format(analysis_tag, total_words)
         f.write(tag.encode('utf-8'))
 
-        for w in words:
-            f.write(w)
+        with codecs.open(tmpfile, 'rb') as words_file:
+            for line in tqdm(words_file):
+                f.write(line)
 
         f.write('  </{}>\n'.format(analysis_tag).encode('utf-8'))
         f.write(b'</document>\n')
+
+    os.remove(tmpfile)
 
 
 if __name__ == '__main__':
