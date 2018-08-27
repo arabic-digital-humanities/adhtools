@@ -6,11 +6,13 @@ import re
 
 @click.command()
 @click.argument('in_file', type=click.File(encoding='utf-8'))
-@click.argument('regex')
+@click.option('--regex', multiple=True)
 @click.option('--out_dir', '-o', default=os.getcwd(), type=click.Path())
 def split_text(in_file, out_dir, regex):
     text = in_file.read()
     # split based on the regex
+    regex = [re.escape(r) for r in regex]
+    regex = '|'.join(regex)
     groups = re.split(regex, text)
 
     # Write out the textfiles
