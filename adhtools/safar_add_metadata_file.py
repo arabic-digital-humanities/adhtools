@@ -4,11 +4,13 @@ import codecs
 import os
 import tempfile
 import re
+import pandas as pd
+import six
 
 from lxml import etree
 from tqdm import tqdm
 
-from nlppln.utils import out_file_name, create_dirs
+from nlppln.utils import out_file_name, create_dirs, remove_ext
 
 
 @click.command()
@@ -20,8 +22,6 @@ def safar_add_metadata(in_file, in_file_meta, out_dir):
 
     analysis_tag = None
     total_words = None
-
-    metadata = '<metadata></metadata>'
 
     # check whether the analysis_tag should be stemmer_analysis
     with codecs.open(in_file, 'r', encoding='utf-8') as xml_file:
@@ -57,12 +57,26 @@ def safar_add_metadata(in_file, in_file_meta, out_dir):
                 del elem.getparent()[0]
         del context
 
-    # Extract the metadata
-    with codecs.open(in_file_meta, 'r', encoding='utf-8') as f:
-        lines = f.readlines()
-    if lines[0].startswith('<?'):
-        lines = lines[1:]
-    metadata = ''.join(lines)
+    # Get the metadata
+    md = pd.read_csv(in_file_meta)
+    md = md.set_index('#META# 000.BookURI')
+    uri = remove_ext(in_file)
+
+    try:
+        md = md.loc[uri]
+        metadata = [u'<metadata>']
+        for key in md.keys()[1:]:  # skip over order (the old index)
+            val = md[key]
+            if isinstance(val, six.string_types):
+                val = val.strip()
+            metadata.append(u'<meta name="{}">{}</meta>'.format(key, val))
+        metadata.append(u'<meta name="{}">{}</meta>'.format(
+                        '#META# 000.BookURI', uri))
+        metadata.append(u'</metadata>')
+
+        metadata = u'\n'.join(metadata)
+    except KeyError:
+        metadata = u'<metadata></metadata>'
 
     # Write output
     click.echo('Writing output')
