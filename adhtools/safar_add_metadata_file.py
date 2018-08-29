@@ -60,7 +60,10 @@ def safar_add_metadata(in_file, in_file_meta, out_dir):
     # Get the metadata
     md = pd.read_csv(in_file_meta)
     md = md.set_index('#META# 000.BookURI')
-    uri = remove_ext(in_file)
+    if '-' in in_file:
+        uri = os.path.basename(in_file).split('-', 1)[0]
+    else:
+        uri = remove_ext(in_file)
 
     try:
         md = md.loc[uri]
