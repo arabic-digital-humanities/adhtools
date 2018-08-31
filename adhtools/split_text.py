@@ -25,6 +25,7 @@ def split_text(in_file, out_dir, regex):
 
             with codecs.open(fname, 'wb', encoding='utf-8') as f:
                 f.write(subtext)
+    click.echo('The text was split into {} pieces.'.format(i))
 
 if __name__ == '__main__':
     split_text()
