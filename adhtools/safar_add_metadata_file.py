@@ -58,8 +58,8 @@ def safar_add_metadata(in_file, in_file_meta, out_dir):
         del context
 
     # Get the metadata
-    md = pd.read_csv(in_file_meta)
-    md = md.set_index('#META# 000.BookURI')
+    md = pd.read_csv(in_file_meta, sep=';', index_col='000.BookURI',
+                     encoding='utf-8')
     if '-' in in_file:
         uri = os.path.basename(in_file).split('-', 1)[0]
     else:
@@ -74,7 +74,7 @@ def safar_add_metadata(in_file, in_file_meta, out_dir):
                 val = val.strip()
             metadata.append(u'<meta name="{}">{}</meta>'.format(key, val))
         metadata.append(u'<meta name="{}">{}</meta>'.format(
-                        '#META# 000.BookURI', uri))
+                        '000.BookURI', uri))
         metadata.append(u'</metadata>')
 
         metadata = u'\n'.join(metadata)
