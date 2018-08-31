@@ -31,7 +31,6 @@ def safar_filter_analyses(in_file, out_dir):
         context = etree.iterparse(in_file, events=('end', ),
                                   tag=('word', 'analysis', 'metadata'))
         for event, elem in tqdm(context):
-
             if elem.tag == 'word':
                 if first_word:
                     tag = '<morphology_analysis total_words="{}">\n'. \
