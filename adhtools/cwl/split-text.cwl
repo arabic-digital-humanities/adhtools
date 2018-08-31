@@ -15,7 +15,12 @@ inputs:
     inputBinding:
       position: 1
   regex:
-    type: string
+    type:
+      type: array
+      items: string
+      inputBinding:
+        prefix: --regex=
+        separate: False
     inputBinding:
       position: 2
 
@@ -24,5 +29,3 @@ outputs:
     type: File[]
     outputBinding:
       glob: "*.txt"
-  
-    
