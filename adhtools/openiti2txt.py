@@ -2,15 +2,8 @@
 import click
 import codecs
 import os
-import re
 
 from nlppln.utils import create_dirs, out_file_name
-
-open_iti_meta_data_patterns = [r'######OpenITI#\n', r'#META#(.+)\n']
-
-quotes = r'@(.+?)@'
-pages = r'PageV(\d{2})P(\d{3,4})'
-milestones = r'Milestone\d+'
 
 
 @click.command()
@@ -19,21 +12,18 @@ milestones = r'Milestone\d+'
 def openiti2txt(in_file, out_dir):
     create_dirs(out_dir)
 
-    text = in_file.read()
+    text = []
+    for line in in_file:
+        # Ignore metadata in the file, openITI header and empty lines
+        if not line.startswith('#META#') and line != '######OpenITI#\n' \
+           and line != '\n':
+            text.append(line)
 
-    # remove metadata header
-    for p in open_iti_meta_data_patterns:
-        text = re.sub(p, '', text)
+    # TODO: optionally remove other openITI tags
 
-    # remove other tags
-    for p in (quotes, pages, milestones):
-        text = re.sub(p, '', text)
-
-    # TODO: normalize spaces
-
-    out_file = out_file_name(out_dir, in_file.name)
-    print(out_file)
-    with codecs.open(out_file, 'wb', encoding='utf-8') as f:
+    text = u''.join(text)
+    fname = out_file_name(out_dir, in_file.name, ext='txt')
+    with codecs.open(fname, 'wb', encoding='utf-8') as f:
         f.write(text)
 
 
