@@ -42,7 +42,7 @@ def safar_filter_analyses(in_file, out_dir):
                 tag = tag.format(len(analyses), elem.attrib['value'],
                                  elem.attrib['w_id'])
                 f.write(tag.encode('utf-8'))
-                f.write(b'\n'.join(analyses))
+                f.write(b''.join(analyses))
                 f.write('</word>\n'.encode('utf-8'))
 
                 analyses = []
