@@ -11,7 +11,9 @@ import re
 def split_text(in_file, out_dir, regex):
     text = in_file.read()
     # split based on the regex
-    regex = [re.escape(r) for r in regex]
+    # the regex is escaped if it contains a | (which is unfortunately part of
+    # the openiti markdown)
+    regex = [re.escape(r) if '|' in r else r for r in regex]
     regex = '|'.join(regex)
     groups = re.split(regex, text)
 
