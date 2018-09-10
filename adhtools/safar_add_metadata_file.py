@@ -60,6 +60,12 @@ def safar_add_metadata(in_file, in_file_meta, out_dir):
     # Get the metadata
     md = pd.read_csv(in_file_meta, sep=';', index_col='000.BookURI',
                      encoding='utf-8')
+    # make sure the index type is string
+    if six.PY2:
+        md.index = md.index.map(unicode)
+    else:
+        md.index = md.index.map(str)
+
     if '-' in os.path.basename(in_file):
         uri = os.path.basename(in_file).split('-', 1)[0]
     else:
