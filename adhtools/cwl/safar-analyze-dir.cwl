@@ -13,28 +13,29 @@ inputs:
       - Alkhalil
       - BAMA
   in_dir: Directory
+  recursive:
+    default: false
+    type: boolean
   cp: string
-  index_name:
-    default: corpus
-    type: string
 outputs:
   safar_output:
+    outputSource: safar-analyze-book-1/safar_output_dir
     type:
-      items: Directory
       type: array
-    outputSource: safar-analyze-book/safar_output_dir
+      items: Directory
 steps:
-  ls:
+  ls-6:
     run: ls.cwl
     in:
       in_dir: in_dir
+      recursive: recursive
     out:
     - out_files
-  safar-analyze-book:
+  safar-analyze-book-1:
     run: safar-analyze-book.cwl
     in:
+      book: ls-6/out_files
       cp: cp
-      book: ls/out_files
       analyzer: analyzer
     out:
     - safar_output_dir
