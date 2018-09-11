@@ -16,16 +16,16 @@ inputs:
       - MOTAZ
       - TASHAPHYNE
   in_dir: Directory
-  recursive:
-    default: false
-    type: boolean?
+  metadata: File
+  regex:
+    default:
+    - '### |'
+    - '### ||'
+    type: string[]
   cp: string
-  split_regex_small:
-    default: Milestone300
-    type: string
 outputs:
-  safar_output:
-    outputSource: safar-split-and-stem-file/xml_file
+  out_files:
+    outputSource: safar-split-and-stem-file/out_file
     type:
       type: array
       items: File
@@ -34,18 +34,17 @@ steps:
     run: ls.cwl
     in:
       in_dir: in_dir
-      recursive: recursive
     out:
     - out_files
   safar-split-and-stem-file:
     run: safar-split-and-stem-file.cwl
     in:
       cp: cp
-      txt_file: ls-5/out_files
-      split_regex_small: split_regex_small
+      in_file: ls-5/out_files
+      metadata: metadata
       stemmer: stemmer
     out:
-    - xml_file
+    - out_file
     scatter:
-    - txt_file
+    - in_file
     scatterMethod: dotproduct

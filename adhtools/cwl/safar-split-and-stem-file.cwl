@@ -12,31 +12,33 @@ inputs:
       - ISRI
       - MOTAZ
       - TASHAPHYNE
-  txt_file: File
+  in_file: File
+  metadata: File
+  regex:
+    default:
+    - '### |'
+    - '### ||'
+    type: string[]
   cp: string
-  split_regex_small:
-    default: Milestone300
-    type: string
 outputs:
-  xml_file:
-    outputSource: merge-safar-xml-2/out_file
+  out_file:
+    outputSource: safar-add-metadata-file-3/out_file
     type: File
 steps:
-  extract_metadata:
-    run: extract_metadata.cwl
+  openiti2txt-2:
+    run: openiti2txt.cwl
     in:
-      in_file: txt_file
+      in_file: in_file
     out:
-    - out_meta
-    - out_txt
+    - out_file
   split-text:
     run: split-text.cwl
     in:
-      in_file: extract_metadata/out_txt
-      regex: split_regex_small
+      in_file: openiti2txt-2/out_file
+      regex: regex
     out:
     - out_files
-  SafarStem:
+  SafarStem-3:
     run: SafarStem.cwl
     in:
       cp: cp
@@ -47,6 +49,13 @@ steps:
   merge-safar-xml-2:
     run: merge-safar-xml.cwl
     in:
-      in_files: SafarStem/out_files
+      in_files: SafarStem-3/out_files
+    out:
+    - out_file
+  safar-add-metadata-file-3:
+    run: safar-add-metadata-file.cwl
+    in:
+      in_file: merge-safar-xml-2/out_file
+      in_file_meta: metadata
     out:
     - out_file

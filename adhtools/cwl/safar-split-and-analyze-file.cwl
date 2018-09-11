@@ -9,65 +9,57 @@ inputs:
       symbols:
       - Alkhalil
       - BAMA
-  book: File
+  txt_file: File
+  metadata: File
   cp: string
   split_regex_small:
-    default: Milestone300
-    type: string
-  dir_name:
-    default: subbooks
-    type: string
+    default:
+    - Milestone300
+    - '### |'
+    - '### ||'
+    type: string[]
 outputs:
   out_file:
-    outputSource: safar-add-metadata-file-1/out_file
+    outputSource: safar-add-metadata-file-2/out_file
     type: File
 steps:
-  extract_metadata-1:
-    run: extract_metadata.cwl
+  openiti2txt-1:
+    run: openiti2txt.cwl
     in:
-      in_file: book
+      in_file: txt_file
     out:
-    - out_meta
-    - out_txt
-  split-text-1:
+    - out_file
+  split-text-2:
     run: split-text.cwl
     in:
-      in_file: extract_metadata-1/out_txt
+      in_file: openiti2txt-1/out_file
       regex: split_regex_small
     out:
     - out_files
-  save-files-to-dir-2:
-    run: save-files-to-dir.cwl
-    in:
-      dir_name: dir_name
-      in_files: split-text-1/out_files
-    out:
-    - out
-  SafarAnalyze-3:
+  SafarAnalyze-4:
     run: SafarAnalyze.cwl
     in:
       cp: cp
-      in_dir: save-files-to-dir-2/out
+      in_files: split-text-2/out_files
       analyzer: analyzer
     out:
     - out_files
-  save-files-to-dir-3:
-    run: save-files-to-dir.cwl
-    in:
-      dir_name: dir_name
-      in_files: SafarAnalyze-3/out_files
-    out:
-    - out
-  merge-safar-xml-1:
+  merge-safar-xml:
     run: merge-safar-xml.cwl
     in:
-      in_dir: save-files-to-dir-3/out
+      in_files: SafarAnalyze-4/out_files
     out:
     - out_file
-  safar-add-metadata-file-1:
+  safar-filter-analyses:
+    run: safar-filter-analyses.cwl
+    in:
+      in_file: merge-safar-xml/out_file
+    out:
+    - out_file
+  safar-add-metadata-file-2:
     run: safar-add-metadata-file.cwl
     in:
-      in_file: merge-safar-xml-1/out_file
-      in_file_meta: extract_metadata-1/out_meta
+      in_file: safar-filter-analyses/out_file
+      in_file_meta: metadata
     out:
     - out_file
