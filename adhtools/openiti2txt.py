@@ -14,9 +14,8 @@ def openiti2txt(in_file, out_dir):
 
     text = []
     for line in in_file:
-        # Ignore metadata in the file, openITI header and empty lines
-        if not line.startswith('#META#') and line != '######OpenITI#\n' \
-           and line != '\n':
+        # Ignore metadata in the file and openITI header
+        if not line.startswith('#META#') and line != '######OpenITI#\n':
             text.append(line)
 
     # TODO: optionally remove other openITI tags
