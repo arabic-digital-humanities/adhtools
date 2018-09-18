@@ -1,7 +1,7 @@
 #!/usr/bin/env cwl-runner
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: ["python", "-m", "nlppln.commands.openiti2txt"]
+baseCommand: ["python", "-m", "adhtools.openiti2txt"]
 
 inputs:
   in_file:
@@ -10,7 +10,7 @@ inputs:
       position: 2
 
 outputs:
-  out_files:
+  out_file:
     type: File
     outputBinding:
       glob: "*"

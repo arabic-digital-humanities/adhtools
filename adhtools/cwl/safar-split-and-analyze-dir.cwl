@@ -13,10 +13,9 @@ inputs:
       - Alkhalil
       - BAMA
   in_dir: Directory
+  metadata: File
   cp: string
-  split_regex_small:
-    default: Milestone300
-    type: string
+  size: int?
 outputs:
   safar_output:
     outputSource: safar-split-and-analyze-file-1/out_file
@@ -24,7 +23,7 @@ outputs:
       type: array
       items: File
 steps:
-  ls-2:
+  ls-4:
     run: ls.cwl
     in:
       in_dir: in_dir
@@ -33,12 +32,12 @@ steps:
   safar-split-and-analyze-file-1:
     run: safar-split-and-analyze-file.cwl
     in:
-      book: ls-2/out_files
       cp: cp
+      metadata: metadata
+      txt_file: ls-4/out_files
       analyzer: analyzer
-      split_regex_small: split_regex_small
     out:
     - out_file
     scatter:
-    - book
+    - txt_file
     scatterMethod: dotproduct

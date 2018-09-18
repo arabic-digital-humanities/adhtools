@@ -1,7 +1,7 @@
 #!/usr/bin/env cwl-runner
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: ["python", "-m", "adhtools.split_text"]
+baseCommand: ["python", "-m", "adhtools.split_text_openiti_headers"]
 
 requirements:
   EnvVarRequirement:
@@ -14,15 +14,6 @@ inputs:
     type: File
     inputBinding:
       position: 1
-  regex:
-    type:
-      type: array
-      items: string
-      inputBinding:
-        prefix: --regex=
-        separate: False
-    inputBinding:
-      position: 2
 
 outputs:
   out_files:

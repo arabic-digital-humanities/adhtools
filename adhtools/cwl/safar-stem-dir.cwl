@@ -17,27 +17,24 @@ inputs:
       - TASHAPHYNE
   in_dir: Directory
   cp: string
-  index_name:
-    default: corpus
-    type: string
 outputs:
   safar_output:
+    outputSource: safar-stem-book/safar_output_dir
     type:
-      items: Directory
       type: array
-    outputSource: safar-stem-book-1/safar_output_dir
+      items: Directory
 steps:
-  ls:
+  ls-1:
     run: ls.cwl
     in:
       in_dir: in_dir
     out:
     - out_files
-  safar-stem-book-1:
+  safar-stem-book:
     run: safar-stem-book.cwl
     in:
+      book: ls-1/out_files
       cp: cp
-      book: ls/out_files
       stemmer: stemmer
     out:
     - safar_output_dir

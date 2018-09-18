@@ -1,9 +1,6 @@
 #!/usr/bin/env cwl-runner
 cwlVersion: v1.0
 class: Workflow
-requirements:
-- class: SubworkflowFeatureRequirement
-- class: ScatterFeatureRequirement
 inputs:
   analyzer:
     default: Alkhalil
@@ -13,31 +10,29 @@ inputs:
       - Alkhalil
       - BAMA
   in_dir: Directory
+  recursive:
+    default: false
+    type: boolean?
   cp: string
-  index_name:
-    default: corpus
-    type: string
 outputs:
-  safar_output:
+  out_files:
+    outputSource: SafarAnalyze-4/out_files
     type:
-      items: Directory
       type: array
-    outputSource: safar-analyze-book/safar_output_dir
+      items: File
 steps:
-  ls:
+  ls-8:
     run: ls.cwl
     in:
       in_dir: in_dir
+      recursive: recursive
     out:
     - out_files
-  safar-analyze-book:
-    run: safar-analyze-book.cwl
+  SafarAnalyze-4:
+    run: SafarAnalyze.cwl
     in:
       cp: cp
-      book: ls/out_files
+      in_files: ls-8/out_files
       analyzer: analyzer
     out:
-    - safar_output_dir
-    scatter:
-    - book
-    scatterMethod: dotproduct
+    - out_files
