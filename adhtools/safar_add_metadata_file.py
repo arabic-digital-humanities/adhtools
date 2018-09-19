@@ -8,9 +8,11 @@ import pandas as pd
 import six
 
 from lxml import etree
+from xml.sax.saxutils import escape
 from tqdm import tqdm
 
 from nlppln.utils import out_file_name, create_dirs, remove_ext
+from .split_text_openiti_headers import smart_strip
 
 
 @click.command()
@@ -42,7 +44,8 @@ def safar_add_metadata(in_file, in_file_meta, out_dir):
     click.echo('Extracting tokens')
     (fd, tmpfile) = tempfile.mkstemp()
     with codecs.open(tmpfile, 'wb') as words:
-        context = etree.iterparse(in_file, events=('end', ), tag=('word'))
+        context = etree.iterparse(in_file, events=('end', ), tag=('word'),
+                                  huge_tree=True)
         context = tqdm(context, total=int(total_words))
         for event, elem in context:
             # Setting method to html (instead of xml) fixes problems
@@ -58,7 +61,7 @@ def safar_add_metadata(in_file, in_file_meta, out_dir):
         del context
 
     # Get the metadata
-    md = pd.read_csv(in_file_meta, sep=';', index_col='000.BookURI',
+    md = pd.read_csv(in_file_meta, sep=',|;', index_col='000.BookURI',
                      encoding='utf-8')
     # make sure the index type is string
     if six.PY2:
@@ -77,7 +80,8 @@ def safar_add_metadata(in_file, in_file_meta, out_dir):
         for key in md.keys()[1:]:  # skip over order (the old index)
             val = md[key]
             if isinstance(val, six.string_types):
-                val = val.strip()
+                val = smart_strip(val)
+                val = escape(val)
             metadata.append(u'<meta name="{}">{}</meta>'.format(key, val))
         metadata.append(u'<meta name="{}">{}</meta>'.format(
                         '000.BookURI', uri))
