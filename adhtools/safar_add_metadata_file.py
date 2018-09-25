@@ -12,7 +12,7 @@ from xml.sax.saxutils import escape
 from tqdm import tqdm
 
 from nlppln.utils import out_file_name, create_dirs, remove_ext
-from .split_text_openiti_headers import smart_strip
+from .split_text_openiti_markers import smart_strip
 
 
 @click.command()
@@ -25,7 +25,7 @@ def safar_add_metadata(in_file, in_file_meta, out_dir):
     analysis_tag = None
     total_words = None
 
-    headers = b'<headers></headers>'
+    markers = b'<markers></markers>'
 
     # check whether the analysis_tag should be stemmer_analysis
     with codecs.open(in_file, 'r', encoding='utf-8') as xml_file:
@@ -42,12 +42,12 @@ def safar_add_metadata(in_file, in_file_meta, out_dir):
             if analysis_tag is not None and total_words is not None:
                 break
 
-    # Extract the words and headers
+    # Extract the words and markers
     click.echo('Extracting tokens')
     (fd, tmpfile) = tempfile.mkstemp()
     with codecs.open(tmpfile, 'wb') as words:
         context = etree.iterparse(in_file, events=('end', ),
-                                  tag=('word', 'headers'),
+                                  tag=('word', 'markers'),
                                   huge_tree=True)
         context = tqdm(context, total=int(total_words))
         for event, elem in context:
@@ -57,8 +57,8 @@ def safar_add_metadata(in_file, in_file_meta, out_dir):
                 # the word element.
                 words.write(etree.tostring(elem, encoding='utf-8',
                                            method='html'))
-            elif elem.tag == 'headers':
-                headers = etree.tostring(elem, encoding='utf-8')
+            elif elem.tag == 'markers':
+                markers = etree.tostring(elem, encoding='utf-8')
 
             # make iteration over context fast and consume less memory
             # https://www.ibm.com/developerworks/xml/library/x-hiperfparse
@@ -116,7 +116,7 @@ def safar_add_metadata(in_file, in_file_meta, out_dir):
 
         f.write('  </{}>\n'.format(analysis_tag).encode('utf-8'))
 
-        f.write(headers)
+        f.write(markers)
 
         f.write(b'</document>\n')
 
