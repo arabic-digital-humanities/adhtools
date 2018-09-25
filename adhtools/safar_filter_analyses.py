@@ -15,6 +15,8 @@ from nlppln.utils import out_file_name
 def safar_filter_analyses(in_file, out_dir):
     analyses = []
 
+    markers = b'<markers></markers>'
+
     xml_out = out_file_name(out_dir, in_file)
     click.echo(xml_out)
     with codecs.open(xml_out, 'wb') as f:
@@ -63,9 +65,10 @@ def safar_filter_analyses(in_file, out_dir):
                                                method='html'))
             elif elem.tag == 'metadata':
                 f.write(etree.tostring(elem, encoding='utf-8'))
+                f.write(b'\n')
 
             elif elem.tag == 'markers':
-                f.write(etree.tostring(elem, encoding='utf-8'))
+                markers = etree.tostring(elem, encoding='utf-8')
 
             # make iteration over context fast and consume less memory
             # https://www.ibm.com/developerworks/xml/library/x-hiperfparse
@@ -75,6 +78,8 @@ def safar_filter_analyses(in_file, out_dir):
         del context
 
         f.write('</morphology_analysis>\n'.encode('utf-8'))
+        f.write(markers)
+        f.write(b'\n')
         f.write('</document>\n'.encode('utf-8'))
 
 
