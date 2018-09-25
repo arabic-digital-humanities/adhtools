@@ -10,6 +10,27 @@ from lxml import etree
 from nlppln.utils import create_dirs, get_files, out_file_name
 
 
+def is_marked(name):
+    if 'header' in name:
+        return True
+    if 'QQuote' in name or 'HQuote' in name:
+        return True
+    return False
+
+
+def marker_xml(marker, marker_words, w_ids, attrib, value):
+    xml = []
+    xml.append('<{} {}="{}">\n'.format(marker, attrib, value).encode('utf-8'))
+    xml.append(b'  <!-- ')
+    xml.append(' '.join(marker_words).encode('utf-8'))
+    xml.append(b' -->\n')
+    for w_id in w_ids:
+        xml.append('  <ref id="{}"/>\n'.format(w_id).encode('utf-8'))
+    xml.append('</{}>\n'.format(marker).encode('utf-8'))
+
+    return b''.join(xml)
+
+
 @click.command()
 @click.argument('in_dir', type=click.Path(exists=True))
 @click.option('--out_dir', '-o', default=os.getcwd(), type=click.Path())
@@ -22,8 +43,8 @@ def merge_safar_xml(in_dir, out_dir):
 
     words = []
     metadata = b'<metadata></metadata>'
-    headers = {}
-    header_words = {}
+    markers = {}
+    marker_words = {}
 
     if len(in_files) == 0:
         msg = 'Unable to merge xml files, because the input directory is ' \
@@ -39,11 +60,10 @@ def merge_safar_xml(in_dir, out_dir):
         (fd, tmpfile) = tempfile.mkstemp()
         with codecs.open(tmpfile, 'wb') as words:
             for i, fi in tqdm.tqdm(enumerate(in_files)):
-                # Check whether we are dealing with a header
-                h = 'header' in os.path.basename(fi)
-                if h:
-                    hname = os.path.basename(fi).rsplit('-', 1)[0]
-                    print(hname)
+                # Check whether we are dealing with a marker
+                m = is_marked(os.path.basename(fi))
+                if m:
+                    mname = os.path.basename(fi).rsplit('-', 1)[0]
 
                 if i == 0:
                     # check whether the analysis_tag should be stemmer_analysis
@@ -57,21 +77,20 @@ def merge_safar_xml(in_dir, out_dir):
                         elif elem.tag == 'metadata':
                             metadata = etree.tostring(elem, encoding='utf-8')
 
-                # Check whether we are dealing with a header
-
-                if h:
-                    if fname not in headers.keys():
-                        headers[hname] = []
-                        header_words[hname] = []
+                # Check whether we are dealing with a marker
+                if m:
+                    if fname not in markers.keys():
+                        markers[mname] = []
+                        marker_words[mname] = []
                 # Extract the words
                 context = etree.iterparse(fi, events=('end', ), tag=('word'))
                 for event, elem in context:
                     num_words += 1
                     elem.attrib['w_id'] = str(num_words)
 
-                    if h:
-                        headers[hname].append(str(num_words))
-                        header_words[hname].append(elem.attrib['value'])
+                    if m:
+                        markers[mname].append(str(num_words))
+                        marker_words[mname].append(elem.attrib['value'])
 
                     # Setting method to html (instead of xml) fixes problems
                     # with writing Arabic characters in the value attribute of
@@ -103,19 +122,22 @@ def merge_safar_xml(in_dir, out_dir):
 
             f.write('  </{}>\n'.format(analysis_tag).encode('utf-8'))
 
-            f.write(b'<headers>\n')
+            f.write(b'<markers>\n')
 
-            for fname, w_ids in headers.items():
-                level = fname.rsplit('-', 1)[1]
-                f.write('<header level="{}">\n'.format(level).encode('utf-8'))
-                f.write(b'<!-- ')
-                f.write(' '.join(header_words[fname]).encode('utf-8'))
-                f.write(b' -->\n')
-                for w_id in w_ids:
-                    f.write('  <ref id="{}"/>'.format(w_id).encode('utf-8'))
-                f.write(b'</header>\n')
+            for fname, w_ids in markers.items():
+                if 'header' in fname:
+                    level = fname.rsplit('-', 1)[1]
+                    f.write(marker_xml('header', marker_words[fname], w_ids,
+                                       'level', level))
+                else:
+                    if 'QQuote' in fname:
+                        typ = 'quran'
+                    else:
+                        typ = 'hadith'
+                    f.write(marker_xml('quote', marker_words[fname], w_ids,
+                                       'type', typ))
 
-            f.write(b'</headers>\n')
+            f.write(b'</markers>\n')
 
             f.write(b'</document>\n')
         os.remove(tmpfile)
