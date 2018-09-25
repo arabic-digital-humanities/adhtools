@@ -15,7 +15,9 @@ def smart_strip(text, to_remove=('\u200f')):
 def split_text(in_file, out_dir):
     text = in_file.read()
 
-    regex = r'\#\#\# (\|+) (.+?)\n'
+    regex = r'\#\#\# (?P<level>\|+) (?P<header>.+?)\n|' \
+            '@(?P<source>[QH])B@(?P<quote>.+?)@(?P=source)E@'
+    # The regex assumes headers and quoran/hadith quotes do not overlap.
 
     start = 0
     i = 0
@@ -34,13 +36,25 @@ def split_text(in_file, out_dir):
                 f.write('\n')
             i += 1
 
-        level = len(m.group(1))
-        header = smart_strip(m.group(2))
-        if len(header) > 0:
+        matches = m.groupdict()
+        # header
+        if matches['header']:
+            level = len(matches['level'])
+            snippet = smart_strip(matches['header'])
+
             fname = '{}-{:05}-header-{}.txt'.format(doc_name, i, level)
             fname = os.path.join(out_dir, fname)
+        # quran or hadith quote
+        else:
+            source = matches['source']
+            snippet = smart_strip(matches['quote'])
+
+            fname = '{}-{:05}-{}.txt'.format(doc_name, i, source)
+            fname = os.path.join(out_dir, fname)
+
+        if len(snippet) > 0:
             with codecs.open(fname, 'w', encoding='utf-8') as f:
-                f.write(header)
+                f.write(snippet)
                 f.write('\n')
             i += 1
 
