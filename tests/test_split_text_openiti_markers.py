@@ -4,7 +4,7 @@ import glob
 
 from click.testing import CliRunner
 
-from adhtools.split_text_openiti_headers import split_text, smart_strip
+from adhtools.split_text_openiti_markers import split_text, smart_strip
 
 
 # Documentation about testing click commands: http://click.pocoo.org/5/testing/
@@ -43,5 +43,5 @@ def test_split_text_openiti_headers():
 
 
 def test_smart_strip():
-    assert smart_strip('\n\n\n\n\n\n\n\u200f') == ''
-    assert smart_strip('quran') == 'quran'
+    assert smart_strip(u'\n\n\n\n\n\n\n\u200f') == u''
+    assert smart_strip(u'quran') == u'quran'
