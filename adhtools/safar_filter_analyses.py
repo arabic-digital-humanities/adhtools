@@ -29,7 +29,8 @@ def safar_filter_analyses(in_file, out_dir):
 
         first_word = True
         context = etree.iterparse(in_file, events=('end', ),
-                                  tag=('word', 'analysis', 'metadata'))
+                                  tag=('word', 'analysis', 'metadata',
+                                       'headers'))
         for event, elem in tqdm(context):
             if elem.tag == 'word':
                 if first_word:
@@ -61,6 +62,9 @@ def safar_filter_analyses(in_file, out_dir):
                 analyses.append(etree.tostring(elem, encoding='utf-8',
                                                method='html'))
             elif elem.tag == 'metadata':
+                f.write(etree.tostring(elem, encoding='utf-8'))
+
+            elif elem.tag == 'headers':
                 f.write(etree.tostring(elem, encoding='utf-8'))
 
             # make iteration over context fast and consume less memory
