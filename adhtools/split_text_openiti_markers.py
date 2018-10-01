@@ -49,7 +49,7 @@ def split_text(in_file, out_dir):
             source = matches['source']
             snippet = smart_strip(matches['quote'])
 
-            fname = '{}-{:05}-{}.txt'.format(doc_name, i, source)
+            fname = '{}-{:05}-{}Quote.txt'.format(doc_name, i, source)
             fname = os.path.join(out_dir, fname)
 
         if len(snippet) > 0:
