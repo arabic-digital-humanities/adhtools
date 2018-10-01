@@ -20,10 +20,8 @@ def is_marked(name):
 
 def marker_xml(marker, marker_words, w_ids, attrib, value):
     xml = []
-    xml.append('<{} {}="{}">\n'.format(marker, attrib, value).encode('utf-8'))
-    xml.append(b'  <!-- ')
-    xml.append(' '.join(marker_words).encode('utf-8'))
-    xml.append(b' -->\n')
+    xml.append('<{} {}="{}" text="{}">\n'.format(marker, attrib, value,
+               ' '.join(marker_words)).encode('utf-8'))
     for w_id in w_ids:
         xml.append('  <ref id="{}"/>\n'.format(w_id).encode('utf-8'))
     xml.append('</{}>\n'.format(marker).encode('utf-8'))
