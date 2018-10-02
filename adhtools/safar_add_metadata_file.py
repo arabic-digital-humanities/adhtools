@@ -90,8 +90,7 @@ def safar_add_metadata(in_file, in_file_meta, out_dir):
                 val = smart_strip(val)
                 val = escape(val)
             metadata.append(u'<meta name="{}">{}</meta>'.format(key, val))
-        metadata.append(u'<meta name="{}">{}</meta>'.format(
-                        '000.BookURI', uri))
+        metadata.append(u'<meta name="{}">{}</meta>'.format('BookURI', uri))
         metadata.append(u'</metadata>')
 
         metadata = u'\n'.join(metadata)
