@@ -24,4 +24,4 @@ outputs:
   out_file:
     type: File
     outputBinding:
-      glob: ${ return inputs.in_files[0].nameroot.split('-').slice(0, -1).join('-')+'.xml'}
+      glob: ${return inputs.in_files[0].nameroot.split('-')[0]+'.xml';}
