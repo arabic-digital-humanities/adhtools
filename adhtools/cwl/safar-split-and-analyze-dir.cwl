@@ -18,24 +18,25 @@ inputs:
   size: int?
 outputs:
   safar_output:
-    outputSource: safar-split-and-analyze-file-1/out_file
+    outputSource: safar-split-and-analyze-file/out_file
     type:
       type: array
       items: File
 steps:
-  ls-4:
+  ls-5:
     run: ls.cwl
     in:
       in_dir: in_dir
     out:
     - out_files
-  safar-split-and-analyze-file-1:
+  safar-split-and-analyze-file:
     run: safar-split-and-analyze-file.cwl
     in:
       cp: cp
       metadata: metadata
-      txt_file: ls-4/out_files
+      txt_file: ls-5/out_files
       analyzer: analyzer
+      size: size
     out:
     - out_file
     scatter:
