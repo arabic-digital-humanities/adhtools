@@ -30,6 +30,7 @@ outputs:
       type: array
       items: File
 steps:
+  ls-5:
     run: ls.cwl
     in:
       in_dir: in_dir
