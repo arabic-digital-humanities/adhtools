@@ -23,6 +23,9 @@ def stemmed_xml_to_txt(in_file, out_dir, nr_tokens):
                 f_out.write(' '.join(sentence)+'\n')
                 sentence = []
             i += 1
+           
+        if len(sentence)>0:
+            f_out.write(' '.join(sentence)+'\n')
             
 if __name__ == '__main__':
     stemmed_xml_to_txt()
