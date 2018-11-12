@@ -18,11 +18,11 @@ def write_xml(xml_out, metadata, words, analysis_tag = 'morphology_analysis', le
         if lev1_title=='':
             lev1_title = '-'
         if lev2_title=='':
-            lev2_title = '-'   
-        metadata_elem = etree.fromstring(metadata)
+            lev2_title = '-'
+        metadata_elem = metadata
         metadata_elem.append(etree.fromstring('<meta name="VolumeTitle">{}</meta>'.format(lev1_title)))
         metadata_elem.append(etree.fromstring('<meta name="ChapterTitle">{}</meta>'.format(lev2_title)))
-        
+
         f.write(etree.tostring(metadata_elem, encoding='utf-8', pretty_print=True))
         f.write(b'\n')
 
@@ -42,11 +42,11 @@ def write_xml(xml_out, metadata, words, analysis_tag = 'morphology_analysis', le
 def analyzer_xml2words_and_headers(fname):
     words = {}
     headers = {}
-    metadata = b'<metadata></metadata>'
-    
+    metadata = etree.fromstring('<metadata></metadata>')
+
     # Extract the words
     context = etree.iterparse(fname, events=('end', ), tag=('word'))
-    for event, elem in tqdm(context):
+    for event, elem in tqdm(context, desc='Extracting words'):
         if elem.tag == 'word':
             w_id = elem.attrib['w_id']
             # Setting method to html (instead of xml) fixes problems
@@ -58,40 +58,42 @@ def analyzer_xml2words_and_headers(fname):
         elem.clear()
         while elem.getprevious() is not None:
             del elem.getparent()[0]
-            
+
     del context
 
     # Extract the headers
     context = etree.iterparse(fname, events=('end', ), tag=('header'))
-    for event, elem in tqdm(context):
+    for event, elem in tqdm(context, desc='Extracting headers'):
         level = int(elem.attrib['level'])
         if level not in headers:
             headers[level] = {}
-            
+
         header_title = elem.attrib['text']
         for ref in elem.getchildren():
             if ref.tag == 'ref':
                 headers[level][int(ref.attrib['id'])] = header_title
         #if elem.tag == 'metadata':
         #    metadata = etree.tostring(elem, encoding='utf-8')
-                    
+
         # make iteration over context fast and consume less memory
         #https://www.ibm.com/developerworks/xml/library/x-hiperfparse
         elem.clear()
         while elem.getprevious() is not None:
             del elem.getparent()[0]
-    
+
+    del context
+
     # Extract the metadata
     context = etree.iterparse(fname, events=('end', ), tag=('metadata'))
-    for event, elem in tqdm(context):
-        metadata = etree.tostring(elem, encoding='utf-8')
-                    
-        # make iteration over context fast and consume less memory
-        #https://www.ibm.com/developerworks/xml/library/x-hiperfparse
-        elem.clear()
-        while elem.getprevious() is not None:
-            del elem.getparent()[0]
-            
+    for event, elem in tqdm(context, desc='Extracting metadata'):
+        metadata = elem
+
+        # There is only one metadata element, so don't waste resources trying
+        # to find more.
+        break
+
+    del context
+
     return words, headers, metadata
 
 
@@ -166,7 +168,7 @@ def write_chapters(words, headers, metadata, xml_file, out_dir):
 @click.option('--out_dir', '-o', default=os.getcwd(), type=click.Path())
 def split_xml_chapters(in_file, out_dir):
     words, headers, metadata = analyzer_xml2words_and_headers(in_file)
-    
+
     write_chapters(words, headers, metadata, in_file, out_dir)
 
 if __name__ == '__main__':
