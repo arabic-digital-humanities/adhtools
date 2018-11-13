@@ -17,12 +17,15 @@ inputs:
   index_format:
     default: safar-stemmer
     type: string
+  xmx:
+    default: 2G
+    type: string
 outputs:
   indexed:
-    outputSource: blacklabindexer-2/out_dir
+    outputSource: blacklabindexer/out_dir
     type: Directory
 steps:
-  merge-yaml-1:
+  merge-yaml:
     run: merge-yaml.cwl
     in:
       in_files:
@@ -31,13 +34,14 @@ steps:
       out_name: yaml_name
     out:
     - out_file
-  blacklabindexer-2:
+  blacklabindexer:
     run: https://raw.githubusercontent.com/arabic-digital-humanities/BlackLabIndexer-docker/master/blacklabindexer.cwl
     in:
       action: action
-      config: merge-yaml-1/out_file
+      config: merge-yaml/out_file
       in_dir: in_dir
       index_format: index_format
       index_name: index_name
+      xmx: xmx
     out:
     - out_dir
