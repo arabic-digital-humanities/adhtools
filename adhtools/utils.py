@@ -63,17 +63,17 @@ def read_file_stemmer(in_file, field='proposed_root'):
     return(list(data[field]))
 
 
-def corpus_wordlist(in_files, analyzer=True):
+def corpus_wordlist(in_files, analyzer=True, field='proposed_root'):
     for in_file in in_files:
         if analyzer:
-            ws = read_file_analyzer(in_file)
+            ws = read_file_analyzer(in_file, field=field)
         else:
-            ws = read_file_stemmer(in_file)
+            ws = read_file_stemmer(in_file, field=field)
         
         yield(ws)
         
-def corpus_str(in_files, analyzer=True):
-    for ws in corpus_wordlist(in_files, analyzer=analyzer):
+def corpus_str(in_files, analyzer=True, field='proposed_root'):
+    for ws in corpus_wordlist(in_files, analyzer=analyzer, field=field):
         yield ' '.join(list(ws))
         
         
