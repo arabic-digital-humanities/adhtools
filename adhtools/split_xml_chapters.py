@@ -123,11 +123,11 @@ def write_chapters(words, headers, metadata, xml_file, out_dir):
                         # write text to file
                         fname = get_out_file_name(doc_name, out_dir, i)
                         write_xml(fname, metadata, text, lev1_title=header1_name, lev2_title=header2_name)
-
-                        #reset
-                        text = []
-                        header1_name = headers[1][wid]
                         i += 1
+                        
+                    #reset - also when text is zero
+                    text = []
+                    header1_name = headers[1][wid]                      
                     header1 = True
             else:
                 header1 = False
@@ -140,16 +140,17 @@ def write_chapters(words, headers, metadata, xml_file, out_dir):
                         # write text to file
                         fname = get_out_file_name(doc_name, out_dir, i)
                         write_xml(fname, metadata, text, lev1_title=header1_name, lev2_title=header2_name)
-
-                        #reset
-                        text = []
-                        header2_name = headers[2][wid]
                         i += 1
+
+                    #reset
+                    text = []
+                    header2_name = headers[2][wid]
                     header2 = True
             else:
                 header2 = False
 
-            text.append(word)
+            if not header1 and not header2:
+                text.append(word)
 
         # Also write away the last chapter
         if len(text) > 0:
