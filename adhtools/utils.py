@@ -53,14 +53,14 @@ def analyzer_xml2df(fname):
     return pd.DataFrame(result)
 
 
-def read_file_analyzer(in_file, field='stem'):
+def read_file_analyzer(in_file, field='proposed_root'):
     data = analyzer_xml2df(in_file)
     return(list(data[field]))
 
 
-def read_file_stemmer(in_file):
+def read_file_stemmer(in_file, field='proposed_root'):
     data = stemmer_xml2df(in_file)
-    return(list(data['proposed_root']))
+    return(list(data[field]))
 
 
 def corpus_wordlist(in_files, analyzer=True):
