@@ -45,52 +45,31 @@ def analyzer_xml2words_and_headers(fname):
     metadata = etree.fromstring('<metadata></metadata>')
 
     # Extract the words
-    context = etree.iterparse(fname, events=('end', ), tag=('word'))
-    for event, elem in tqdm(context, desc='Extracting words'):
+    context = etree.iterparse(fname, events=('end', ),
+                              tag=('word', 'header', 'metadata'))
+    for event, elem in tqdm(context, desc='Extracting data'):
         if elem.tag == 'word':
             w_id = elem.attrib['w_id']
             # Setting method to html (instead of xml) fixes problems
             # with writing Arabic characters in the value attribute of
             # the word element.
             words[int(w_id)] = etree.tostring(elem, encoding='utf-8', method='html')
+        if elem.tag == 'header':
+            level = int(elem.attrib['level'])
+            if level not in headers:
+                headers[level] = {}
+
+            header_title = elem.attrib['text']
+            for ref in elem.getchildren():
+                if ref.tag == 'ref':
+                    headers[level][int(ref.attrib['id'])] = header_title
+        if elem.tag == 'metadata':
+            metadata = elem
         # make iteration over context fast and consume less memory
-        #https://www.ibm.com/developerworks/xml/library/x-hiperfparse
+        # https://www.ibm.com/developerworks/xml/library/x-hiperfparse
         elem.clear()
         while elem.getprevious() is not None:
             del elem.getparent()[0]
-
-    del context
-
-    # Extract the headers
-    context = etree.iterparse(fname, events=('end', ), tag=('header'))
-    for event, elem in tqdm(context, desc='Extracting headers'):
-        level = int(elem.attrib['level'])
-        if level not in headers:
-            headers[level] = {}
-
-        header_title = elem.attrib['text']
-        for ref in elem.getchildren():
-            if ref.tag == 'ref':
-                headers[level][int(ref.attrib['id'])] = header_title
-        #if elem.tag == 'metadata':
-        #    metadata = etree.tostring(elem, encoding='utf-8')
-
-        # make iteration over context fast and consume less memory
-        #https://www.ibm.com/developerworks/xml/library/x-hiperfparse
-        elem.clear()
-        while elem.getprevious() is not None:
-            del elem.getparent()[0]
-
-    del context
-
-    # Extract the metadata
-    context = etree.iterparse(fname, events=('end', ), tag=('metadata'))
-    for event, elem in tqdm(context, desc='Extracting metadata'):
-        metadata = elem
-
-        # There is only one metadata element, so don't waste resources trying
-        # to find more.
-        break
 
     del context
 
@@ -124,10 +103,10 @@ def write_chapters(words, headers, metadata, xml_file, out_dir):
                         fname = get_out_file_name(doc_name, out_dir, i)
                         write_xml(fname, metadata, text, lev1_title=header1_name, lev2_title=header2_name)
                         i += 1
-                        
+
                     #reset - also when text is zero
                     text = []
-                    header1_name = headers[1][wid]                      
+                    header1_name = headers[1][wid]
                     header1 = True
             else:
                 header1 = False
