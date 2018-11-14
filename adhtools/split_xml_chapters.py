@@ -22,6 +22,7 @@ def write_xml(xml_out, metadata, words, analysis_tag = 'morphology_analysis', le
         metadata_elem = metadata
         metadata_elem.append(etree.fromstring('<meta name="VolumeTitle">{}</meta>'.format(lev1_title)))
         metadata_elem.append(etree.fromstring('<meta name="ChapterTitle">{}</meta>'.format(lev2_title)))
+        metadata_elem.append(etree.fromstring('<meta name="ChapterLength">{}</meta>'.format(len(words))))
 
         f.write(etree.tostring(metadata_elem, encoding='utf-8', pretty_print=True))
         f.write(b'\n')
