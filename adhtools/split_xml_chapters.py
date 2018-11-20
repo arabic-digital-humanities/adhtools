@@ -4,6 +4,7 @@ import os
 from lxml import etree
 import codecs
 import shutil
+import copy
 from tqdm import tqdm
 
 from nlppln.utils import out_file_name
@@ -19,7 +20,7 @@ def write_xml(xml_out, metadata, words, analysis_tag = 'morphology_analysis', le
             lev1_title = '-'
         if lev2_title=='':
             lev2_title = '-'
-        metadata_elem = metadata
+        metadata_elem = copy.copy(metadata)
         metadata_elem.append(etree.fromstring('<meta name="VolumeTitle">{}</meta>'.format(lev1_title)))
         metadata_elem.append(etree.fromstring('<meta name="ChapterTitle">{}</meta>'.format(lev2_title)))
         metadata_elem.append(etree.fromstring('<meta name="ChapterLength">{}</meta>'.format(len(words))))
@@ -65,7 +66,7 @@ def analyzer_xml2words_and_headers(fname):
                 if ref.tag == 'ref':
                     headers[level][int(ref.attrib['id'])] = header_title
         if elem.tag == 'metadata':
-            metadata = elem
+            metadata = copy.copy(elem)
         # make iteration over context fast and consume less memory
         # https://www.ibm.com/developerworks/xml/library/x-hiperfparse
         elem.clear()
