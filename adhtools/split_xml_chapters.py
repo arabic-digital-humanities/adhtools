@@ -9,20 +9,21 @@ from tqdm import tqdm
 
 from nlppln.utils import out_file_name
 
-def write_xml(xml_out, metadata, words, analysis_tag = 'morphology_analysis', lev1_title='', lev2_title=''):
+def write_xml(xml_out, metadata, words, header_titles, analysis_tag = 'morphology_analysis'):
     total_words = len(words)
     with codecs.open(xml_out, 'wb') as f:
         f.write(b'<?xml version="1.0" encoding="utf-8"?>\n')
         f.write(b'<document>\n')
 
         ## Add metadata
-        if lev1_title=='':
-            lev1_title = '-'
-        if lev2_title=='':
-            lev2_title = '-'
         metadata_elem = copy.copy(metadata)
-        metadata_elem.append(etree.fromstring('<meta name="VolumeTitle">{}</meta>'.format(lev1_title)))
-        metadata_elem.append(etree.fromstring('<meta name="ChapterTitle">{}</meta>'.format(lev2_title)))
+        for l, title in enumerate(header_titles):
+            if title == '':
+                title = '-'
+            metadata_elem.append(etree.fromstring('<meta name="Level{}Title">{}</meta>'.format(l+1, title)))
+        #metadata_elem.append(etree.fromstring('<meta name="VolumeTitle">{}</meta>'.format(lev1_title)))
+        #metadata_elem.append(etree.fromstring('<meta name="ChapterTitle">{}</meta>'.format(lev2_title)))
+   
         metadata_elem.append(etree.fromstring('<meta name="ChapterLength">{}</meta>'.format(len(words))))
 
         f.write(etree.tostring(metadata_elem, encoding='utf-8', pretty_print=True))
@@ -83,61 +84,42 @@ def get_out_file_name(doc_name, out_dir, i):
     fname = out_file_name(out_dir, fname)
     return fname
 
-def write_chapters(words, headers, metadata, xml_file, out_dir):
+def write_chapters(words, headers, metadata, xml_file, out_dir, levels):
     doc_name = os.path.splitext(os.path.basename(xml_file))[0]
-    header_ids = list(headers.get(1, {}).keys()) + list(headers.get(2, {}).keys() )
+    if levels is None:
+        levels = len(headers.keys())
+    header_ids = [headers.get(i, {}).keys() for i in range(1, levels+1)]
     if(len(header_ids)>0):
         # do the stuff
         print('Available headers: {}'.format(list(headers.keys())))
         text = []
-        header1 = False
-        header2 = False
+        is_header = [False]*levels
         i = 0
-        header1_name = ''
-        header2_name = ''
+        header_titles = ['']*levels
         for wid, word in words.items():
-            # Level 1 header
-            if wid in headers.get(1,{}):
-                if header1 == False:
-                    if len(text) > 0:
-                        # start of new header
-                        # write text to file
-                        fname = get_out_file_name(doc_name, out_dir, i)
-                        write_xml(fname, metadata, text, lev1_title=header1_name, lev2_title=header2_name)
-                        i += 1
+            for l in range(1, levels+1):             
+                if wid in headers.get(l,{}):
+                    if not is_header[l-1]:
+                        if len(text) > 0:
+                            # start of new header
+                            # write text to file
+                            fname = get_out_file_name(doc_name, out_dir, i)
+                            write_xml(fname, metadata, text, header_titles=header_titles)
+                            i += 1
 
-                    #reset - also when text is zero
-                    text = []
-                    header1_name = headers[1][wid]
-                    header1 = True
-            else:
-                header1 = False
-
-            # Level 2 header
-            if wid in headers.get(2,{}):
-                if header2 == False:
-                    if len(text) > 0:
-                        # start of new header
-                        # write text to file
-                        fname = get_out_file_name(doc_name, out_dir, i)
-                        write_xml(fname, metadata, text, lev1_title=header1_name, lev2_title=header2_name)
-                        i += 1
-
-                    #reset
-                    text = []
-                    header2_name = headers[2][wid]
-                    header2 = True
-            else:
-                header2 = False
-
-            if not header1 and not header2:
-                text.append(word)
+                        #reset - also when text is zero
+                        text = []
+                        header_titles[l-1] = headers[l][wid]
+                        is_header[l-1] = True
+                else:
+                    is_header[l-1] = False
+            text.append(word)
 
         # Also write away the last chapter
         if len(text) > 0:
             # write text to file
             fname = get_out_file_name(doc_name, out_dir, i)
-            write_xml(fname, metadata, text, lev1_title=header1_name, lev2_title=header2_name)
+            write_xml(fname, metadata, text, header_titles=header_titles)
     else:
         # no header information, just copy the input file
         print('No headers in', doc_name)
@@ -147,11 +129,12 @@ def write_chapters(words, headers, metadata, xml_file, out_dir):
 
 @click.command()
 @click.argument('in_file', type=click.Path(exists=True))
+@click.option('--levels', '-l', default=None, type=int)
 @click.option('--out_dir', '-o', default=os.getcwd(), type=click.Path())
-def split_xml_chapters(in_file, out_dir):
+def split_xml_chapters(in_file, levels, out_dir):
     words, headers, metadata = analyzer_xml2words_and_headers(in_file)
 
-    write_chapters(words, headers, metadata, in_file, out_dir)
+    write_chapters(words, headers, metadata, in_file, out_dir, levels)
 
 if __name__ == '__main__':
     split_xml_chapters()
