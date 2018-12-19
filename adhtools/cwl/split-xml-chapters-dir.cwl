@@ -5,6 +5,7 @@ requirements:
 - class: ScatterFeatureRequirement
 inputs:
   in_dir: Directory
+  levels: int?
 outputs:
   out_files:
     outputSource: split-xml-chapters/out_files
@@ -24,6 +25,7 @@ steps:
     run: split-xml-chapters.cwl
     in:
       in_file: ls/out_files
+      levels: levels
     out:
     - out_files
     scatter:

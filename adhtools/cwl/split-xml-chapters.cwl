@@ -14,6 +14,10 @@ inputs:
     type: File
     inputBinding:
       position: 1
+  levels:
+    type: int?
+    inputBinding:
+      prefix: --levels
 
 outputs:
   out_files:
