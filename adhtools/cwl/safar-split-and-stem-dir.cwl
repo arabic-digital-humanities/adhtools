@@ -40,11 +40,11 @@ steps:
     run: safar-split-and-stem-file.cwl
     in:
       cp: cp
-      in_file: ls-5/out_files
+      txt_file: ls-5/out_files
       metadata: metadata
       stemmer: stemmer
     out:
     - out_file
     scatter:
-    - in_file
+    - txt_file
     scatterMethod: dotproduct
