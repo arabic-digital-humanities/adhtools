@@ -67,7 +67,7 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['nlppln>=0.3.1', 'tqdm', 'yamlreader'],
+    install_requires=['nlppln>=0.3.3', 'tqdm', 'yamlreader'],
     setup_requires=[
         # dependency for `python setup.py test`
         'pytest-runner',
