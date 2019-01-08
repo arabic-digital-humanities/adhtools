@@ -23,7 +23,7 @@ outputs:
       type: array
       items: File
 steps:
-  ls-5:
+  ls-3:
     run: ls.cwl
     in:
       in_dir: in_dir
@@ -34,7 +34,7 @@ steps:
     in:
       cp: cp
       metadata: metadata
-      txt_file: ls-5/out_files
+      txt_file: ls-3/out_files
       analyzer: analyzer
       size: size
     out:
