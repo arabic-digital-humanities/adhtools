@@ -8,6 +8,8 @@ requirements:
   EnvVarRequirement:
     envDef:
       LANG: en_US.UTF-8    # This value is apparently used by SAFAR for the output file encoding
+      LC_ALL: C.UTF-8
+
 
 baseCommand: ["java"]
 
