@@ -1,7 +1,7 @@
 #!/usr/bin/env cwl-runner
 cwlVersion: v1.0
 class: CommandLineTool
-baseCommand: ["python", "-m", "adhtools.extract_metadata"]
+baseCommand: ["python", "-m", "adhtools.extract_metadata_xml"]
 requirements:
   EnvVarRequirement:
     envDef:
@@ -9,17 +9,14 @@ requirements:
       LANG: C.UTF-8
 
 inputs:
-  in_file:
-    type: File
+  in_dir:
+    type: Directory
     inputBinding:
       position: 0
 
 outputs:
-  out_txt:
+  out_file:
     type: File
     outputBinding:
-      glob: "*.txt"
-  out_meta:
-    type: File
-    outputBinding:
-      glob: "*.xml"
+      glob: "metadata.csv"
+
