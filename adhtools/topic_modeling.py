@@ -15,17 +15,28 @@ def train_model(corpus, external_stopwords, nr_topics, n_iter):
     model.fit(X)
     return model, feature_names
 
+def get_corpus(book_files, input_type):
+    if input_type=='stemmer':
+        corpus = adhtools.utils.corpus_str(book_files, analyzer=False, field='proposed_root')
+    elif input_type=='analyzer':
+        corpus = adhtools.utils.corpus_str(book_files, analyzer=True, field='proposed_root')
+    else:
+        raise ValueError("Invalid value for input_type")
+    return corpus
+
 @click.command()
 @click.argument('in_dir', type=click.Path())
 @click.option('--stop_words', default=None, type=click.File(encoding='utf-8'))
 @click.option('--nr_topics', '-n', default=10, type=int)
 @click.option('--n_iter', '-i', default=500, type=int)
 @click.option('--out_dir', '-o', default=os.getcwd(), type=click.Path())
-def topic_modeling(in_dir, stop_words, nr_topics, n_iter, out_dir):
+@click.option('--input_type', type=click.Choice(['analyzer', 'stemmer']), default='stemmer')
+def topic_modeling(in_dir, stop_words, nr_topics, n_iter, out_dir, input_type):
     book_files = glob.glob(os.path.join(in_dir, '*.xml'))
     fnames = [os.path.basename(fn) for fn in book_files]
     external_stopwords = [line.strip() for line in stop_words] if stop_words is not None else []
-    corpus = adhtools.utils.corpus_str(book_files, analyzer=False, field='proposed_root')
+    analyzer = input_type == 'analyzer'
+    corpus = adhtools.utils.corpus_str(book_files, analyzer=analyzer, field='proposed_root')
     
     model, feature_names = train_model(corpus, external_stopwords, nr_topics, n_iter)
 
