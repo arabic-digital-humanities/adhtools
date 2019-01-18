@@ -4,6 +4,8 @@ Scripts for manipulating Arabic texts.
 
 ## Installation
 
+This software requires Python 3.
+
 ```
 git clone git@github.com:arabic-digital-humanities/research-scripts.git
 cd research-scripts
