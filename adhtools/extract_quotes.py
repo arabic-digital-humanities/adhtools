@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+"""Extract Quran quotes from an OpenITI markdown file.
+
+And write them to a text file. The text file contains a single quote per line.
+"""
 import click
 import os
 import re
@@ -8,10 +12,14 @@ from nlppln.utils import out_file_name
 @click.command()
 @click.argument('in_file', type=click.File(encoding='utf-8'))
 @click.option('--out_dir', '-o', default=os.getcwd(), type=click.Path())
-def extract_quotes(in_file, out_dir):    
-	
+def extract_quotes(in_file, out_dir):
+	"""Extract Quran quotes from an OpenITI markdown file.
+
+    And write them to a text file. The text file contains a single quote per
+    line.
+    """
     data = in_file.read()
-    
+
     qurquotes = re.findall(r'@QB@(.*)@QE@', data)
 
     fn_out = out_file_name(out_dir, 'quotes_'+os.path.basename(in_file.name), ext='txt')
@@ -24,6 +32,6 @@ def extract_quotes(in_file, out_dir):
             if len(q)>0:
                 f.write(re.sub('[^\u0621-\u064A ]', '', q)) #Remove annotations
                 f.write('\n')
-                
+
 if __name__ == '__main__':
     extract_quotes()

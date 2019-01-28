@@ -1,3 +1,9 @@
+"""Split a text in OpenITI format based on the markers that are present.
+
+To be able to keep track of information on headers, Quran and hadith quotes,
+header and quote text is stored in separate files. These are later merged using
+the merge_safar_xml tool.
+"""
 import click
 import codecs
 import os
@@ -13,6 +19,8 @@ def smart_strip(text, to_remove=(u'\u200f')):
 @click.argument('in_file', type=click.File(encoding='utf-8'))
 @click.option('--out_dir', '-o', default=os.getcwd(), type=click.Path())
 def split_text(in_file, out_dir):
+    """Split an OpenITI textinto separate files for headers, quotes, and text.
+    """
     text = in_file.read()
 
     regex = r'\#\#\# (?P<level>\|+) (?P<header>.+?)\n|' \
@@ -73,6 +81,7 @@ def split_text(in_file, out_dir):
         i += 1
 
     click.echo('The text was split into {} pieces.'.format(i))
+
 
 if __name__ == '__main__':
     split_text()

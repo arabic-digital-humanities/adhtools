@@ -1,4 +1,11 @@
 #!/usr/bin/env python
+"""Draft version of code that merges markup back into an OpenITI text fileself.
+
+We added markup to text files OpenITI was interested in, this is the start of
+a command line tool that merges OpenITI mark up.
+
+This code is not finished, and currently not used. Perhaps delete it?
+"""
 import click
 import codecs
 import os

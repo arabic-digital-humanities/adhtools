@@ -1,4 +1,11 @@
 #!/usr/bin/env python
+"""Reduce file size of SAFAR output files by removing unnecessary analyses.
+
+For every word in a text, SAFAR can return many analyses. Often these analyses
+differ on other aspects than the ones we are interested in (i.e., root and
+stem). Because large files are more difficult to handle, we remove everything
+we don't need.
+"""
 import click
 import os
 import codecs
@@ -13,6 +20,8 @@ from nlppln.utils import out_file_name
 @click.argument('in_file', type=click.Path(exists=True))
 @click.option('--out_dir', '-o', default=os.getcwd(), type=click.Path())
 def safar_filter_analyses(in_file, out_dir):
+    """Tool for filtering duplicate root/stem pairs from SAFAR output.
+    """
     analyses = []
 
     markers = b'<markers></markers>'
