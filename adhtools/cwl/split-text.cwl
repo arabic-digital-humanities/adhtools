@@ -3,6 +3,9 @@ cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: ["python", "-m", "adhtools.split_text"]
 
+doc: |
+  Split text in parts -> Not used anymore, so can be deleted?
+
 requirements:
   EnvVarRequirement:
     envDef:

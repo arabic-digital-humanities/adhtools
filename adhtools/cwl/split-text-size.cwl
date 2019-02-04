@@ -3,6 +3,9 @@ cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: ["python", "-m", "adhtools.split_text_size"]
 
+doc: |
+  Split a text in separate files of a certain size.
+
 requirements:
   EnvVarRequirement:
     envDef:

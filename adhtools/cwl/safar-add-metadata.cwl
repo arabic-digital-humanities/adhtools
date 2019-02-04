@@ -2,6 +2,10 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: ["python", "-m", "adhtools.safar_add_metadata"]
+
+doc: |
+  Not used anymore? Has been replaced by `safar_add_metadata_file.py`?
+
 requirements:
   InitialWorkDirRequirement:
     listing: $(inputs.in_files)
