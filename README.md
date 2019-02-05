@@ -43,6 +43,13 @@ Expected input for the complete workflows are texts in [openITI format](https://
 
 The output of the workflows (list them here) are xml files that can be used for analysis, or indexed in Blacklab.
 
+## Running workflows
+
+The workflows can be run with cwltool. This is a requirement of the research
+scripts and therefore installed when research-scripts is installed. The
+[nlppln documentation](https://nlppln.readthedocs.io/en/latest/running_workflows.html)
+contains  more information about running cwl workflows.
+
 ## Top level workflows
 
 * `safar-split-and-analyze-file.cwl`
