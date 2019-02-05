@@ -1,8 +1,8 @@
+#!/usr/bin/env python
 """Remove metadata from a text in OpenITI format.
 
 Used in split-file-chapters workflow.
 """
-#!/usr/bin/env python
 import click
 import codecs
 import os
