@@ -33,7 +33,7 @@ def extract_quotes_xml(in_dir, out_dir):
 
     Write the output to one csv file, containing the quote and position in the file.
     """
-    book_files = glob.glob(in_dir+'*.xml')
+    book_files = glob.glob(os.path.join(in_dir,'*.xml'))
     print(len(book_files))
     quotes = []
     for fname in tqdm(book_files):
