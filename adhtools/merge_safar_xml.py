@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+"""Merge separate SAFAR output files into a single output file.
+
+Before stemming or analyzing, the text files are split into multiple small
+files. This is done to prevent SAFAR from running out of memory when it has
+to write a very large XML file to disk. After stemming or analyzing, the
+xml output files for the split text have to be combined into a single output
+xml file. This file contains the command line tool to do this.
+"""
 import click
 import os
 import codecs
@@ -11,6 +19,11 @@ from nlppln.utils import create_dirs, get_files, out_file_name
 
 
 def is_marked(name):
+    """Returns True if the input file contains either a header or a Quran quote
+
+    The file name is used to determine whether the file contains a header or a
+    Quran quote.
+    """
     if 'header' in name:
         return True
     if 'QQuote' in name or 'HQuote' in name:
@@ -19,6 +32,26 @@ def is_marked(name):
 
 
 def marker_xml(marker, marker_words, w_ids, attrib, value):
+    """Returns marker xml given words and word ids.
+
+    For headers, this function returns a byte string like:
+    <header level="1" text="Some Arabic text">
+      <ref id="145795"/>
+      <ref id="145796"/>
+      <ref id="145797"/>
+      <ref id="145798"/>
+      <ref id="145799"/>
+    </header>
+
+   And for Quran/Hadith quotes:
+   <quote type="quran|hadith" text="Some Arabic text">
+     <ref id="3824"/>
+     <ref id="3825"/>
+     <ref id="3826"/>
+     <ref id="3827"/>
+     <ref id="3828"/>
+    </quote>
+    """
     xml = []
     xml.append('<{} {}="{}" text="{}">\n'.format(marker, attrib, value,
                ' '.join(marker_words)).encode('utf-8'))
@@ -33,6 +66,8 @@ def marker_xml(marker, marker_words, w_ids, attrib, value):
 @click.argument('in_dir', type=click.Path(exists=True))
 @click.option('--out_dir', '-o', default=os.getcwd(), type=click.Path())
 def merge_safar_xml(in_dir, out_dir):
+    """Command line tool that merges SAFAR xml files into a single file.
+    """
     create_dirs(out_dir)
 
     in_files = get_files(in_dir)

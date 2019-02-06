@@ -1,11 +1,20 @@
 #!/usr/bin/env cwl-runner
 cwlVersion: v1.0
 class: Workflow
+doc: |-
+  Split SAFAR XML with header information into an XML file per chapter.
+      
+      Inputs:
+          in_dir (Directory): Directory containing SAFAR XML files with header 
+              information (i.e., output created with `safar-split-and-analyze-dir.cwl`).
+      
+      Output:
+          Directory containing a SAFAR XML file for each chapter.
+      
 requirements:
 - class: ScatterFeatureRequirement
 inputs:
   in_dir: Directory
-  levels: int?
 outputs:
   out_files:
     outputSource: split-xml-chapters/out_files
@@ -25,7 +34,6 @@ steps:
     run: split-xml-chapters.cwl
     in:
       in_file: ls/out_files
-      levels: levels
     out:
     - out_files
     scatter:

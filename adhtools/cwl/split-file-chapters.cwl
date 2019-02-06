@@ -1,6 +1,20 @@
 #!/usr/bin/env cwl-runner
 cwlVersion: v1.0
 class: Workflow
+doc: |-
+  Split a text in OpenITI format in smaller pieces.
+      
+      First, the OpenITI metadata is removed. Next, the file is split on
+      OpenITI markers, to be able to retain information about headers and
+      quotes. Finally, the files are split based on file size, to make
+      sure SAFAR does not crash on big input files.
+      
+      Input:
+          txt_file (File): The name of the input file, a text in OpenITI format.
+          
+      Output:
+          A list of text files, that can be analyzed or stemmed using SAFAR.
+      
 requirements:
 - class: ScatterFeatureRequirement
 inputs:
@@ -12,7 +26,7 @@ outputs:
       type: array
       items: File
 steps:
-  openiti2txt-1:
+  openiti2txt:
     run: openiti2txt.cwl
     in:
       in_file: txt_file
@@ -21,10 +35,10 @@ steps:
   split-text-openiti-markers:
     run: split-text-openiti-markers.cwl
     in:
-      in_file: openiti2txt-1/out_file
+      in_file: openiti2txt/out_file
     out:
     - out_files
-  split-text-size-1:
+  split-text-size:
     run: split-text-size.cwl
     in:
       in_file: split-text-openiti-markers/out_files
@@ -36,6 +50,6 @@ steps:
   flatten-list:
     run: flatten-list.cwl
     in:
-      list: split-text-size-1/out_files
+      list: split-text-size/out_files
     out:
     - out_files

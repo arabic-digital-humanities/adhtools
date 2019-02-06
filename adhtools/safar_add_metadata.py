@@ -1,3 +1,5 @@
+"""Not used anymore? Has been replaced by `safar_add_metadata_file.py`?
+"""
 #!/usr/bin/env python
 import click
 import codecs

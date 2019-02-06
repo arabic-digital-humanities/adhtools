@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+"""Remove metadata from a text in OpenITI format.
+
+Used in split-file-chapters workflow.
+"""
 import click
 import codecs
 import os
@@ -10,6 +14,8 @@ from nlppln.utils import create_dirs, out_file_name
 @click.argument('in_file', type=click.File(encoding='utf-8'))
 @click.option('--out_dir', '-o', default=os.getcwd(), type=click.Path())
 def openiti2txt(in_file, out_dir):
+    """Remove metadata from a text in OpenITI format.
+    """
     create_dirs(out_dir)
 
     text = []

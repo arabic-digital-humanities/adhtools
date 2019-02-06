@@ -1,3 +1,8 @@
+"""Tool for splitting SAFAR analyzer XML with header information into chapters.
+
+The result is a SAFAR XML file for each chapter. If the input XML file does not
+contain header information, the input file is copied.
+"""
 import click
 import codecs
 import os
@@ -10,6 +15,8 @@ from tqdm import tqdm
 from nlppln.utils import out_file_name
 
 def write_xml(xml_out, metadata, words, header_titles, analysis_tag = 'morphology_analysis'):
+    """Write an XML file for a chapter.
+    """
     total_words = len(words)
     with codecs.open(xml_out, 'wb') as f:
         f.write(b'<?xml version="1.0" encoding="utf-8"?>\n')
@@ -23,7 +30,7 @@ def write_xml(xml_out, metadata, words, header_titles, analysis_tag = 'morpholog
             metadata_elem.append(etree.fromstring('<meta name="Level{}Title">{}</meta>'.format(l+1, title)))
         #metadata_elem.append(etree.fromstring('<meta name="VolumeTitle">{}</meta>'.format(lev1_title)))
         #metadata_elem.append(etree.fromstring('<meta name="ChapterTitle">{}</meta>'.format(lev2_title)))
-   
+
         metadata_elem.append(etree.fromstring('<meta name="ChapterLength">{}</meta>'.format(len(words))))
 
         f.write(etree.tostring(metadata_elem, encoding='utf-8', pretty_print=True))
@@ -43,6 +50,8 @@ def write_xml(xml_out, metadata, words, header_titles, analysis_tag = 'morpholog
 
 
 def analyzer_xml2words_and_headers(fname):
+    """Split SAFAR analyzer XML into words, headers and metadata.
+    """
     words = {}
     headers = {}
     metadata = etree.fromstring('<metadata></metadata>')
@@ -80,11 +89,23 @@ def analyzer_xml2words_and_headers(fname):
 
 
 def get_out_file_name(doc_name, out_dir, i):
+    """Generate name for the output file that contains a chapter.
+
+    The output name is based on the name of the input file and an index.
+    """
     fname = '{}-{:05}.xml'.format(doc_name, i)
     fname = out_file_name(out_dir, fname)
     return fname
 
 def write_chapters(words, headers, metadata, xml_file, out_dir, levels):
+    """Write a file for the specified levels.
+
+    This function divides the words into chapters (based on the level/header
+    information) and writes a file for each specified level.
+
+    By default, the text is split on all headers headers that are available in
+    the input XML file.
+    """
     doc_name = os.path.splitext(os.path.basename(xml_file))[0]
     if levels is None:
         levels = len(headers.keys())
@@ -97,7 +118,7 @@ def write_chapters(words, headers, metadata, xml_file, out_dir, levels):
         i = 0
         header_titles = ['']*levels
         for wid, word in words.items():
-            for l in range(1, levels+1):             
+            for l in range(1, levels+1):
                 if wid in headers.get(l,{}):
                     if not is_header[l-1]:
                         if len(text) > 0:
@@ -132,6 +153,8 @@ def write_chapters(words, headers, metadata, xml_file, out_dir, levels):
 @click.option('--levels', '-l', default=None, type=int)
 @click.option('--out_dir', '-o', default=os.getcwd(), type=click.Path())
 def split_xml_chapters(in_file, levels, out_dir):
+    """Split SAFAR analyzer XML with header information into chapters.
+    """
     words, headers, metadata = analyzer_xml2words_and_headers(in_file)
 
     write_chapters(words, headers, metadata, in_file, out_dir, levels)

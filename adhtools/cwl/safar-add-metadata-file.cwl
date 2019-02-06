@@ -2,6 +2,10 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: ["python", "-m", "adhtools.safar_add_metadata_file"]
+
+doc: |
+  Add metadata from a csv file to a SAFAR XML file.
+
 requirements:
   EnvVarRequirement:
     envDef:

@@ -1,3 +1,5 @@
+"""Add metadata from a csv file to a SAFAR XML file.
+"""
 #!/usr/bin/env python
 import click
 import codecs
@@ -20,6 +22,8 @@ from .split_text_openiti_markers import smart_strip
 @click.argument('in_file_meta', type=click.Path(exists=True))
 @click.option('--out_dir', '-o', default=os.getcwd(), type=click.Path())
 def safar_add_metadata(in_file, in_file_meta, out_dir):
+    """Add metadata from a csv file to a SAFAR XML file.
+    """
     create_dirs(out_dir)
 
     analysis_tag = None
