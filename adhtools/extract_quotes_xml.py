@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+"""Extract Quran quotes from Safar XML files with header/quote information.
+"""
 import click
 from lxml import etree
 from tqdm import tqdm
