@@ -6,6 +6,7 @@ import os
 import numpy as np
 import lda
 import glob
+import pickle
 
 def train_model(corpus, external_stopwords, nr_topics, n_iter):
     vectorizer = CountVectorizer( stop_words=external_stopwords, min_df=2, max_df=0.9)
@@ -46,6 +47,9 @@ def topic_modeling(in_dir, stop_words, nr_topics, n_iter, out_dir, input_type):
     topic_words = pd.DataFrame(np.argsort(model.components_, axis=1)[:,-10:][::-1])
     topic_words = topic_words.applymap(lambda l: feature_names[l])
     topic_words.to_csv(os.path.join(out_dir, 'topics_{}.csv'.format(nr_topics)))
+    
+    with open(os.path.join(out_dir, 'model_{}.pkl'.format(nr_topics)), 'wb') as f:
+        pickle.dump(model, f)
 
 if __name__ == '__main__':
     topic_modeling()

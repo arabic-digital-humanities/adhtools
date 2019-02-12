@@ -40,4 +40,4 @@ outputs:
   out_files:
     type: File[]
     outputBinding:
-      glob: "*.csv"
+      glob: "*"
