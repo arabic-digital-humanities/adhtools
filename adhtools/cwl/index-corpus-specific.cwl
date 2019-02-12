@@ -1,10 +1,9 @@
 #!/usr/bin/env cwl-runner
 cwlVersion: v1.0
 class: Workflow
-doc: |2-
+doc: |
+  Index a corpus with corpus specific metadata.
 
-      Index a corpus with corpus specific metadata.
-      
       Inputs:
           generic_yaml (File): yaml file containing the generic indexer configuration, 
               i.e., one of the blacklab indexer formats from 
@@ -25,10 +24,9 @@ doc: |2-
           index_format (str): The index format to be used, i.e., either ``safar-stemmer`` or 
               ``safar-analyzer`` (see https://github.com/arabic-digital-humanities/index-safar).
           xmx (str): Optional parameter to set the Java heap space (default: 2G).
-      
+
       Outputs:
           Directory containing a BlackLab index.
-      
 requirements:
 - class: MultipleInputFeatureRequirement
 inputs:
