@@ -43,6 +43,13 @@ Expected input for the complete workflows are texts in [openITI format](https://
 
 The output of the workflows (list them here) are xml files that can be used for analysis, or indexed in Blacklab.
 
+## Running workflows
+
+The workflows can be run with cwltool. This is a requirement of the research
+scripts and therefore installed when research-scripts is installed. The
+[nlppln documentation](https://nlppln.readthedocs.io/en/latest/running_workflows.html)
+contains  more information about running cwl workflows.
+
 ## Top level workflows
 
 * `safar-split-and-analyze-file.cwl`
@@ -103,25 +110,3 @@ The output of the workflows (list them here) are xml files that can be used for 
 	- Python step `split-text.cwl` that splits on regex. Potentially useful for different corpora. Maybe make more generic and part of nlppln?
 * `safar-split-and-analyze-file-no-filtering.cwl`
 	- Old version of `safar-split-and-analyze-file.cwl`, but retains all fields (remove?)
-
-## Other
-
-### Preprocess input text files
-
-* `adhtools/txt2safar_input.py`: Given a text file (in OpenITI format), create a text file for each page and an xml file containing the metadata.
-* `adhtools/safar_add_metadata.py`: Add metadata from the txt files to the xml file with SAFAR analyzer results.
-
-### Pipelines for analyzing
-
-[This notebook](https://github.com/arabic-digital-humanities/research-scripts/blob/master/notebooks/index-workflow.ipynb) shows how to create pipelines for processing the next using `nlppln`.
-To run a workflow, copy all cwl steps to a cwl-working-dir. Copy the files from these three directories: `adhtools/cwl`, `java/cwl` and from the [nlppln repository](https://github.com/nlppln/nlppln/tree/master/nlppln/cwl). See [the documentation of nlppln](http://nlppln.readthedocs.io/en/latest/).
-
-To analyze and index a complete directory, run from within the desired output directory:
-```
-cwltool ~/cwl-working-dir/analyze-and-index-dir.cwl \
-   --cp /path/to/java-lib/*:/path/to/arabic-digital-humanities/research-scripts/java/    \
-   --in_dir /path/to/corpus    \
-   --xml_dir_name corpus-xml     \
-   --index_name corpus \
-   --analyzer BAMA
-```

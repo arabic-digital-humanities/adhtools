@@ -6,8 +6,6 @@ baseCommand: ["python", "-m", "adhtools.openiti2txt"]
 doc: |
   Remove metadata from a text in OpenITI format.
 
-  Is this command used?
-
 requirements:
   EnvVarRequirement:
     envDef:

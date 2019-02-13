@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+"""Extract Quran quotes from Safar XML files with header/quote information.
+"""
 import click
 from lxml import etree
 from tqdm import tqdm
@@ -8,10 +10,10 @@ import glob
 
 def extract_quotes(fname, quote_type = 'quran'):
     quotes = []
-    context = etree.iterparse(fname, events=('end', ),tag=('quote'), encoding='utf-8')
+    context = etree.iterparse(fname, events=('end', ),tag=('word', 'quote'), encoding='utf-8')
     book_id = os.path.basename(fname)[:-4]
     for event, elem in context:
-        if elem.attrib['type']==quote_type:
+        if elem.tag == 'quote' and elem.attrib['type']==quote_type:
             refs = list(elem.getchildren())
             if len(refs)>0:
                 ref_position = refs[0].attrib['id']
@@ -21,6 +23,11 @@ def extract_quotes(fname, quote_type = 'quran'):
             quotes.append({'BookURI': book_id,
                            'quote': elem.attrib['text'],
                           'position': ref_position})
+        # make iteration over context fast and consume less memory
+        # https://www.ibm.com/developerworks/xml/library/x-hiperfparse
+        elem.clear()
+        while elem.getprevious() is not None:
+            del elem.getparent()[0]
     return quotes
 
 
@@ -44,6 +51,3 @@ def extract_quotes_xml(in_dir, out_dir):
 
 if __name__ == '__main__':
     extract_quotes_xml()
-
-
-

@@ -17,6 +17,14 @@ def stemmer_xml2df(fname):
         for a in elem.getchildren():
             if a.tag == 'analysis':
                 stem = a.attrib['stem']
+
+                # For the Khoja stemmer only (for other stemmers this value is
+                # always 'ROOT'). If the word is not stemmed, it is a letter
+                # (indicated by #).
+                # http://zeus.cs.pacificu.edu/shereen/research.htm#stemming
+                typ = a.attrib.get('type')
+                if typ == 'NOT STEMMED':
+                    stem = '#'
         result.append({'word': elem.attrib['value'], 'proposed_root': stem})
 
         # make iteration over context fast and consume less memory
@@ -86,7 +94,7 @@ def corpus_str(in_files, analyzer=True, field='proposed_root'):
 
 
 def normalize_arabic(text):
-    """Remove non-Arabic characters and convert some other characters. 
+    """Remove non-Arabic characters and convert some other characters.
     """
     # Remove non-arabic characters
     nonarab_chars = '[^\u0621-\u064A ]'

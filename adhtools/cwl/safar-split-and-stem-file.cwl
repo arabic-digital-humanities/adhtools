@@ -5,10 +5,11 @@ doc: |-
   Stem a text file in OpenITI format using SAFAR.
       
       To be able to retain information about headers and quotes, the text is first 
-      split into files for text, headers and quotes. Next, the files are stemmed 
-      using SAFAR and the resulting XML files are merged into one big file, 
-      containing metadata and information about which words are part of headers and 
-      quotes.
+      split into files for text, headers and quotes. Next, the resulting files are
+      split based on file size, because SAFAR crashes if the output XML files become
+      too large. Next, the small files are stemmed using SAFAR and the resulting XML
+      files are merged into one big file, containing metadata and information about 
+      which words are part of headers and quotes.
       
       Inputs:
           stemmer (enum): The SAFAR stemmer to use. Options are (KHOJA, LIGHT10, 
