@@ -2,6 +2,12 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: ["python", "-m", "adhtools.topic_modeling"]
+doc: |
+  Perform topic modeling with LDA on SAFAR stemmed XML files
+  
+  The result is three files: a model.pkl file, a csv file with most important words per topic and a csv file with the topic distribution per document.
+  The model.pkl can be loaded and applied on unseen documents.
+  
 requirements:
   EnvVarRequirement:
     envDef:
