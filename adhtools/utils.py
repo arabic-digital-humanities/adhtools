@@ -71,12 +71,20 @@ def analyzer_xml2df(fname):
 
 def read_file_analyzer(in_file, field='proposed_root'):
     data = analyzer_xml2df(in_file)
-    return(list(data[field]))
+    try:
+        return(list(data[field]))
+    except KeyError:  # This happens if the analyzed document is empty
+        print('Error: no stemmed words found in ', in_file)
+        return([])
 
 
 def read_file_stemmer(in_file, field='proposed_root'):
     data = stemmer_xml2df(in_file)
-    return(list(data[field]))
+    try:
+        return(list(data[field]))
+    except KeyError:  # This happens if the stemmed document is empty
+        print('Error: no stemmed words found in ', in_file)
+        return([])
 
 
 def corpus_wordlist(in_files, analyzer=True, field='proposed_root'):
