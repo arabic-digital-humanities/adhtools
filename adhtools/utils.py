@@ -38,7 +38,7 @@ def stemmer_xml2df(fname):
 def analyzer_xml2df(fname):
     """Convert SAFAR analyzer XML into a pandas dataframe with words and roots.
 
-    Multiple roots are separated by a backslash (\).
+    Multiple roots are separated by a backslash (\\).
     """
     result = []
 
