@@ -1,0 +1,14 @@
+{
+    "creators": [
+        {
+            "name": "van der Zwaan, Janneke"
+        },
+        {
+            "name": "van Kuppevelt, Dafne"
+        }
+    ],
+    "license": {
+        "id": "Apache-2.0"
+    },
+    "title": "adhtools"
+}

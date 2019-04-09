@@ -1,4 +1,6 @@
-# research-scripts
+[![DOI](https://zenodo.org/badge/118894019.svg)](https://zenodo.org/badge/latestdoi/118894019)
+
+# adhtools: tools for Arabic Digital Humanities
 
 Scripts for manipulating Arabic texts.
 
@@ -7,8 +9,8 @@ Scripts for manipulating Arabic texts.
 This software requires Python 3.
 
 ```
-git clone git@github.com:arabic-digital-humanities/research-scripts.git
-cd research-scripts
+git clone git@github.com:arabic-digital-humanities/adhtools.git
+cd adhtools
 python setup.py develop
 ```
 
@@ -23,12 +25,12 @@ Add to your class path:
 
 Then run the analyzer:
 ```
-java -cp ".:/path/to/SAFAR/*:/path/to/SAFAR/lib/*:/path/to/research-scripts/bin/ SafarAnalyze </path/to/input/directory> </path/to/output/directory> <SAFAR analyzer (Alkhalil|BAMA)>
+java -cp ".:/path/to/SAFAR/*:/path/to/SAFAR/lib/*:/path/to/adhtools/bin/ SafarAnalyze </path/to/input/directory> </path/to/output/directory> <SAFAR analyzer (Alkhalil|BAMA)>
 ```
 
 Or use the CWL specification:
 ```
-cwltool /path/to/research-scripts/java/cwl/SafarAnalyze.cwl --cp <what to add to the class path> --in_dir </path/to/input/directory> --analyzer <SAFAR analyzer (Alkhalil|BAMA)>
+cwltool /path/to/adhtools/java/cwl/SafarAnalyze.cwl --cp <what to add to the class path> --in_dir </path/to/input/directory> --analyzer <SAFAR analyzer (Alkhalil|BAMA)>
 ```
 
 ## Workflows
@@ -39,14 +41,12 @@ Expected input for the complete workflows are texts in [openITI format](https://
 - There are markers for chapters, that can be used to split the files and add to the metadata (by default we split on (`### |` (books) and `### ||` (chapters)))
 - The filename corresponds to the BookURI (the filename is `<BookURI>.txt`)
 - There is a separate .csv file with metadata, each row corresponding to one book. The column 'BookURI' can be used to couple with the OpenITI files.
-* (NB do we assume any other meta data fields?)
 
 The output of the workflows (list them here) are xml files that can be used for analysis, or indexed in Blacklab.
 
 ## Running workflows
 
-The workflows can be run with cwltool. This is a requirement of the research
-scripts and therefore installed when research-scripts is installed. The
+The workflows can be run with cwltool. This is a requirement of adhtools and therefore installed when adhtools is installed. The
 [nlppln documentation](https://nlppln.readthedocs.io/en/latest/running_workflows.html)
 contains  more information about running cwl workflows.
 
@@ -83,7 +83,7 @@ contains  more information about running cwl workflows.
 * `openiti2txt.cwl`
 	- Used by `split-file-chapters.cwl`
 * `safar-add-metadata.cwl`
-	- Existing python step that adds the metadata for dir instead of directory. Why not using scatter?
+	- Existing python step that adds the metadata for dir instead of directory. 
 * `safar-add-metadata-file.cwl`
 	- Used by `safar-split-and-analyze-file.cwl` and `safar-split-and-stem-file.cwl`
 * `safar-filter-analyses.cwl`
@@ -101,12 +101,12 @@ contains  more information about running cwl workflows.
 * `add-metadata-dir.cwl`
 	- Scatter of safar-add-metadata-file.cwl
 * `extract_metadata-xml.cwl`
-	- Existing python step that extracts metdata from directory with xml and puts it into a csv file. Useful??
+	- Existing python step that extracts metdata from directory with xml and puts it into a csv file.
 * `safar-add-metadata.cwl`
-	- Existing python step that adds the metadata for dir instead of directory. Why not using scatter?
+	- Existing python step that adds the metadata for dir instead of directory. 
 * `split-dir-chapters.cwl`
-	- Scatter of split-file-chapters.cwl. Not used, but maybe useful?
+	- Scatter of split-file-chapters.cwl.
 * `split-text.cwl`
-	- Python step `split-text.cwl` that splits on regex. Potentially useful for different corpora. Maybe make more generic and part of nlppln?
+	- Python step `split-text.cwl` that splits on regex. Potentially useful for different corpora. 
 * `safar-split-and-analyze-file-no-filtering.cwl`
-	- Old version of `safar-split-and-analyze-file.cwl`, but retains all fields (remove?)
+	- Old version of `safar-split-and-analyze-file.cwl`, but retains all fields

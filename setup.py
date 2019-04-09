@@ -16,12 +16,12 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.0.0',
+    version='0.1.0',
 
     description=__doc__,
     long_description=__doc__,     # read('README.rst'),
     # The project's main homepage.
-    url='https://github.com/arabic-digital-humanities/research-scripts',
+    url='https://github.com/arabic-digital-humanities/adhtools',
 
     # Author details
     #author='Janneke van der Zwaan',
