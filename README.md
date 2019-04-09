@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/118894019.svg)](https://zenodo.org/badge/latestdoi/118894019)
+
 # adhtools: tools for Arabic Digital Humanities
 
 Scripts for manipulating Arabic texts.
