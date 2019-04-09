@@ -1,4 +1,4 @@
-# research-scripts
+# adhtools: tools for Arabic Digital Humanities
 
 Scripts for manipulating Arabic texts.
 
@@ -7,8 +7,8 @@ Scripts for manipulating Arabic texts.
 This software requires Python 3.
 
 ```
-git clone git@github.com:arabic-digital-humanities/research-scripts.git
-cd research-scripts
+git clone git@github.com:arabic-digital-humanities/adhtools.git
+cd adhtools
 python setup.py develop
 ```
 
@@ -23,12 +23,12 @@ Add to your class path:
 
 Then run the analyzer:
 ```
-java -cp ".:/path/to/SAFAR/*:/path/to/SAFAR/lib/*:/path/to/research-scripts/bin/ SafarAnalyze </path/to/input/directory> </path/to/output/directory> <SAFAR analyzer (Alkhalil|BAMA)>
+java -cp ".:/path/to/SAFAR/*:/path/to/SAFAR/lib/*:/path/to/adhtools/bin/ SafarAnalyze </path/to/input/directory> </path/to/output/directory> <SAFAR analyzer (Alkhalil|BAMA)>
 ```
 
 Or use the CWL specification:
 ```
-cwltool /path/to/research-scripts/java/cwl/SafarAnalyze.cwl --cp <what to add to the class path> --in_dir </path/to/input/directory> --analyzer <SAFAR analyzer (Alkhalil|BAMA)>
+cwltool /path/to/adhtools/java/cwl/SafarAnalyze.cwl --cp <what to add to the class path> --in_dir </path/to/input/directory> --analyzer <SAFAR analyzer (Alkhalil|BAMA)>
 ```
 
 ## Workflows
@@ -45,8 +45,7 @@ The output of the workflows (list them here) are xml files that can be used for 
 
 ## Running workflows
 
-The workflows can be run with cwltool. This is a requirement of the research
-scripts and therefore installed when research-scripts is installed. The
+The workflows can be run with cwltool. This is a requirement of adhtools and therefore installed when adhtools is installed. The
 [nlppln documentation](https://nlppln.readthedocs.io/en/latest/running_workflows.html)
 contains  more information about running cwl workflows.
 
