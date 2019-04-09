@@ -21,7 +21,7 @@ setup(
     description=__doc__,
     long_description=__doc__,     # read('README.rst'),
     # The project's main homepage.
-    url='https://github.com/arabic-digital-humanities/research-scripts',
+    url='https://github.com/arabic-digital-humanities/adhtools',
 
     # Author details
     #author='Janneke van der Zwaan',
