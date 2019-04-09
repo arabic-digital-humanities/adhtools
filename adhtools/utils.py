@@ -33,7 +33,12 @@ def stemmer_xml2df(fname):
         while elem.getprevious() is not None:
             del elem.getparent()[0]
 
-    return pd.DataFrame(result)
+    try:
+        result = pd.DataFrame(result)
+    except:
+        print('Error in', fname)
+
+    return result
 
 def analyzer_xml2df(fname):
     """Convert SAFAR analyzer XML into a pandas dataframe with words and roots.
@@ -85,6 +90,8 @@ def read_file_stemmer(in_file, field='proposed_root'):
     except KeyError:  # This happens if the stemmed document is empty
         print('Error: no stemmed words found in ', in_file)
         return([])
+    except:
+        print('A different error in', in_file)
 
 
 def corpus_wordlist(in_files, analyzer=True, field='proposed_root'):
