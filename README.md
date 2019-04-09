@@ -39,7 +39,6 @@ Expected input for the complete workflows are texts in [openITI format](https://
 - There are markers for chapters, that can be used to split the files and add to the metadata (by default we split on (`### |` (books) and `### ||` (chapters)))
 - The filename corresponds to the BookURI (the filename is `<BookURI>.txt`)
 - There is a separate .csv file with metadata, each row corresponding to one book. The column 'BookURI' can be used to couple with the OpenITI files.
-* (NB do we assume any other meta data fields?)
 
 The output of the workflows (list them here) are xml files that can be used for analysis, or indexed in Blacklab.
 
@@ -82,7 +81,7 @@ contains  more information about running cwl workflows.
 * `openiti2txt.cwl`
 	- Used by `split-file-chapters.cwl`
 * `safar-add-metadata.cwl`
-	- Existing python step that adds the metadata for dir instead of directory. Why not using scatter?
+	- Existing python step that adds the metadata for dir instead of directory. 
 * `safar-add-metadata-file.cwl`
 	- Used by `safar-split-and-analyze-file.cwl` and `safar-split-and-stem-file.cwl`
 * `safar-filter-analyses.cwl`
@@ -100,12 +99,12 @@ contains  more information about running cwl workflows.
 * `add-metadata-dir.cwl`
 	- Scatter of safar-add-metadata-file.cwl
 * `extract_metadata-xml.cwl`
-	- Existing python step that extracts metdata from directory with xml and puts it into a csv file. Useful??
+	- Existing python step that extracts metdata from directory with xml and puts it into a csv file.
 * `safar-add-metadata.cwl`
-	- Existing python step that adds the metadata for dir instead of directory. Why not using scatter?
+	- Existing python step that adds the metadata for dir instead of directory. 
 * `split-dir-chapters.cwl`
-	- Scatter of split-file-chapters.cwl. Not used, but maybe useful?
+	- Scatter of split-file-chapters.cwl.
 * `split-text.cwl`
-	- Python step `split-text.cwl` that splits on regex. Potentially useful for different corpora. Maybe make more generic and part of nlppln?
+	- Python step `split-text.cwl` that splits on regex. Potentially useful for different corpora. 
 * `safar-split-and-analyze-file-no-filtering.cwl`
-	- Old version of `safar-split-and-analyze-file.cwl`, but retains all fields (remove?)
+	- Old version of `safar-split-and-analyze-file.cwl`, but retains all fields
