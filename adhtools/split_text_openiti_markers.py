@@ -10,7 +10,7 @@ import os
 import re
 
 
-def smart_strip(text, to_remove=(u'\u200f')):
+def smart_strip(text, to_remove=(u'\u200f', u'\u202c')):
     text = ''.join(list(filter(lambda char: char not in to_remove, text)))
     return text.strip()
 
