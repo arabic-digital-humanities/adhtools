@@ -20,8 +20,9 @@ from .split_text_openiti_markers import smart_strip
 @click.command()
 @click.argument('in_file', type=click.Path(exists=True))
 @click.argument('in_file_meta', type=click.Path(exists=True))
+@click.option('--max_len', '-m', default=94)
 @click.option('--out_dir', '-o', default=os.getcwd(), type=click.Path())
-def safar_add_metadata(in_file, in_file_meta, out_dir):
+def safar_add_metadata(in_file, in_file_meta, max_len, out_dir):
     """Add metadata from a csv file to a SAFAR XML file.
     """
     create_dirs(out_dir)
@@ -93,6 +94,13 @@ def safar_add_metadata(in_file, in_file_meta, out_dir):
             if isinstance(val, six.string_types):
                 val = smart_strip(val)
                 val = escape(val)
+                # Make sure the values aren't to long, because
+                # BlackLab doesn't allow values that are to long in dropdowns.
+                # The default value of 94 was set emperically. It seems the
+                # lengths of strings are caluclated differently in Java (the
+                # max length in Java is 256).
+                if len(val) >= max_len:
+                    val = 'X '+val[:max_len-2]
             metadata.append(u'<meta name="{}">{}</meta>'.format(key, val))
         metadata.append(u'<meta name="{}">{}</meta>'.format('BookURI', uri))
         metadata.append(u'</metadata>')
